@@ -14,65 +14,74 @@
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
   :root {
-    --ink: #0f1c3d;
-    --ink-soft: #4a5a7d;
-    --paper: #e8ecfb;
+    --ink: #16233d;
+    --ink-soft: #5b6b85;
     --paper-raised: #ffffff;
-    --border: #ccd5f0;
-    --accent: #1c42c9;
-    --accent-soft: #dbe4fc;
-    --shadow: 0 1px 2px rgba(16,24,40,0.05), 0 1px 1px rgba(16,24,40,0.04);
-    --blob-a: rgba(28,66,201,0.20);
-    --blob-b: rgba(20,140,220,0.16);
-    --dot: rgba(28,66,201,0.16);
+    --border: #e1e4ea;
+    --accent: #2f5fe0;
+    --accent-bright: #5eead4;
+    --accent-soft: #e8edfc;
+    --on-bg: #f4f7ff;
+    --on-bg-soft: #b9c8f0;
+    --bg-start: #0b0c1c;
+    --bg-mid: #12132a;
+    --glow-1: rgba(139,92,246,0.40);
+    --glow-2: rgba(236,72,153,0.32);
+    --glow-3: rgba(34,211,238,0.14);
+    --shadow: 0 10px 30px -12px rgba(6,14,40,0.35);
+    --bg-decor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 640 480' fill='none' opacity='0.16'%3E%3Cline x1='40' y1='400' x2='600' y2='400' stroke='%23ffffff' stroke-width='1.2'/%3E%3Cline x1='40' y1='60' x2='40' y2='400' stroke='%23ffffff' stroke-width='1.2'/%3E%3Crect x='80' y='300' width='36' height='100' stroke='%23ffffff' stroke-width='1.2'/%3E%3Crect x='140' y='260' width='36' height='140' stroke='%23ffffff' stroke-width='1.2'/%3E%3Crect x='200' y='220' width='36' height='180' stroke='%23ffffff' stroke-width='1.2'/%3E%3Crect x='260' y='180' width='36' height='220' stroke='%23ffffff' stroke-width='1.2'/%3E%3Cpolyline points='340,340 390,300 430,320 470,260 510,230 560,190' stroke='%235eead4' stroke-width='1.8'/%3E%3Ccircle cx='340' cy='340' r='4' stroke='%235eead4' stroke-width='1.4'/%3E%3Ccircle cx='390' cy='300' r='4' stroke='%235eead4' stroke-width='1.4'/%3E%3Ccircle cx='430' cy='320' r='4' stroke='%235eead4' stroke-width='1.4'/%3E%3Ccircle cx='470' cy='260' r='4' stroke='%235eead4' stroke-width='1.4'/%3E%3Ccircle cx='510' cy='230' r='4' stroke='%235eead4' stroke-width='1.4'/%3E%3Ccircle cx='560' cy='190' r='4' stroke='%235eead4' stroke-width='1.4'/%3E%3Ccircle cx='560' cy='100' r='46' stroke='%23ffffff' stroke-width='1.2'/%3E%3Cpath d='M560 54 A46 46 0 0 1 597 130' stroke='%235eead4' stroke-width='3'/%3E%3C/svg%3E");
   }
   @media (prefers-color-scheme: dark) {
     :root:not([data-theme="light"]) {
-      --ink: #e7eaf0; --ink-soft: #8d98ae; --paper: #080d1c; --paper-raised: #121a2e;
-      --border: #24304f; --accent: #5a7dff; --accent-soft: #1c2740; --shadow: 0 1px 2px rgba(0,0,0,0.3);
-      --blob-a: rgba(90,125,255,0.22); --blob-b: rgba(45,212,255,0.14); --dot: rgba(90,125,255,0.18);
+      --ink: #e7eaf0; --ink-soft: #8d98ae; --paper-raised: #151c2b; --border: #262f47;
+      --accent: #6d8dff; --accent-soft: #1c2740; --on-bg: #eef2ff; --on-bg-soft: #93a3d1;
+      --bg-start: #07070f; --bg-mid: #0d0e1e;
+      --glow-1: rgba(139,92,246,0.34); --glow-2: rgba(236,72,153,0.26); --glow-3: rgba(34,211,238,0.12);
+      --shadow: 0 10px 30px -12px rgba(0,0,0,0.5);
     }
   }
   :root[data-theme="dark"] {
-    --ink: #e7eaf0; --ink-soft: #8d98ae; --paper: #080d1c; --paper-raised: #121a2e;
-    --border: #24304f; --accent: #5a7dff; --accent-soft: #1c2740; --shadow: 0 1px 2px rgba(0,0,0,0.3);
-    --blob-a: rgba(90,125,255,0.22); --blob-b: rgba(45,212,255,0.14); --dot: rgba(90,125,255,0.18);
+    --ink: #e7eaf0; --ink-soft: #8d98ae; --paper-raised: #151c2b; --border: #262f47;
+    --accent: #6d8dff; --accent-soft: #1c2740; --on-bg: #eef2ff; --on-bg-soft: #93a3d1;
+    --bg-start: #07070f; --bg-mid: #0d0e1e;
+    --glow-1: rgba(139,92,246,0.34); --glow-2: rgba(236,72,153,0.26); --glow-3: rgba(34,211,238,0.12);
+    --shadow: 0 10px 30px -12px rgba(0,0,0,0.5);
   }
   * { box-sizing: border-box; }
+  html { background: var(--bg-start); }
   body {
-    margin: 0; background: var(--paper); color: var(--ink); font-family: 'Inter', system-ui, sans-serif;
-    min-height: 100vh; position: relative; overflow-x: hidden;
-  }
-  body::before {
-    content: ""; position: fixed; inset: 0; z-index: -2; pointer-events: none;
-    background:
-      radial-gradient(560px circle at 12% 8%, var(--blob-a), transparent 60%),
-      radial-gradient(620px circle at 88% 30%, var(--blob-b), transparent 60%),
-      radial-gradient(480px circle at 50% 95%, var(--blob-a), transparent 60%);
-  }
-  body::after {
-    content: ""; position: fixed; inset: 0; z-index: -1; pointer-events: none;
-    background-image: radial-gradient(var(--dot) 1.4px, transparent 1.4px);
-    background-size: 28px 28px;
-    -webkit-mask-image: radial-gradient(ellipse 90% 70% at 50% 30%, black 40%, transparent 85%);
-    mask-image: radial-gradient(ellipse 90% 70% at 50% 30%, black 40%, transparent 85%);
-    opacity: 0.6;
+    margin: 0;
+    background-color: var(--bg-start);
+    background-image:
+      radial-gradient(760px 640px at 4% -8%, var(--glow-1), transparent 62%),
+      radial-gradient(700px 580px at 98% 20%, var(--glow-2), transparent 64%),
+      radial-gradient(620px 500px at 25% 118%, var(--glow-3), transparent 60%),
+      var(--bg-decor);
+    background-repeat: no-repeat, no-repeat, no-repeat, no-repeat;
+    background-position: top left, top right, bottom left, top right;
+    background-size: auto, auto, auto, min(680px, 75vw) auto;
+    background-attachment: fixed, fixed, fixed, fixed;
+    color: var(--on-bg);
+    font-family: 'Inter', system-ui, sans-serif;
+    min-height: 100vh;
+    border-top: 3px solid var(--accent-bright);
+    position: relative; overflow-x: hidden;
   }
   h1, h2, .display { font-family: 'Space Grotesk', system-ui, sans-serif; }
 
   .wrap { max-width: 900px; margin: 0 auto; padding: 60px 20px 80px; position: relative; z-index: 1; }
   header { text-align: center; margin-bottom: 48px; }
-  header .mark { width: 46px; height: 46px; background: var(--accent); border-radius: 12px; margin: 0 auto 18px; }
-  header h1 { font-size: 30px; margin: 0 0 10px; letter-spacing: -0.02em; }
-  header p { color: var(--ink-soft); font-size: 15.5px; max-width: 480px; margin: 0 auto; line-height: 1.5; }
+  header .mark { width: 46px; height: 46px; background: var(--accent-bright); border-radius: 12px; margin: 0 auto 18px; }
+  header h1 { font-size: 30px; margin: 0 0 10px; letter-spacing: -0.02em; color: var(--on-bg); }
+  header p { color: var(--on-bg-soft); font-size: 15.5px; max-width: 480px; margin: 0 auto; line-height: 1.5; }
 
   .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
   a.card {
     display: block; background: var(--paper-raised); border: 1px solid var(--border); border-radius: 14px;
-    padding: 28px; text-decoration: none; color: inherit; box-shadow: var(--shadow);
+    padding: 28px; text-decoration: none; color: var(--ink); box-shadow: var(--shadow);
     transition: transform .15s ease, box-shadow .15s ease;
   }
-  a.card:hover { transform: translateY(-3px); box-shadow: 0 12px 28px -8px rgba(16,24,40,0.18); }
+  a.card:hover { transform: translateY(-3px); box-shadow: 0 16px 34px -10px rgba(0,0,0,0.45); }
   a.card .icon {
     width: 46px; height: 46px; border-radius: 10px; background: var(--accent-soft); color: var(--accent);
     display: flex; align-items: center; justify-content: center; margin-bottom: 16px;
@@ -81,7 +90,7 @@
   a.card p { color: var(--ink-soft); font-size: 14px; line-height: 1.5; margin: 0 0 14px; }
   a.card .cta { font-size: 13px; font-weight: 600; color: var(--accent); }
 
-  footer { text-align: center; margin-top: 56px; font-size: 12.5px; color: var(--ink-soft); }
+  footer { text-align: center; margin-top: 56px; font-size: 12.5px; color: var(--on-bg-soft); }
   footer a { color: inherit; }
 </style>
 </head>
