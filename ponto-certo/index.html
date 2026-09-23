@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<title>Ponto Certo — calculadora de horas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Inter:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.2/jspdf.umd.min.js"></script>
+<style>
+  :root {
+    --ink: #1e2530;
+    --ink-soft: #5c6672;
+    --paper: #f1f0ea;
+    --paper-raised: #ffffff;
+    --border: #ddd7c8;
+    --accent: #c17817;
+    --accent-soft: #f4e3c8;
+    --extra: #b33a3a;
+    --extra-soft: #f6dede;
+    --credit: #2f7a4f;
+    --credit-soft: #dcece1;
+    --radius-s: 5px;
+    --radius-m: 9px;
+    --shadow: 0 1px 2px rgba(30,37,48,0.05), 0 1px 1px rgba(30,37,48,0.04);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --ink: #ece9e2;
+      --ink-soft: #a29d90;
+      --paper: #17181a;
+      --paper-raised: #201f1c;
+      --border: #38352c;
+      --accent: #dba24f;
+      --accent-soft: #3a2f1a;
+      --extra: #e07a6b;
+      --extra-soft: #3a2321;
+      --credit: #6bbf8e;
+      --credit-soft: #1f3126;
+      --shadow: 0 1px 2px rgba(0,0,0,0.3);
+    }
+  }
+  :root[data-theme="dark"] {
+    --ink: #ece9e2;
+    --ink-soft: #a29d90;
+    --paper: #17181a;
+    --paper-raised: #201f1c;
+    --border: #38352c;
+    --accent: #dba24f;
+    --accent-soft: #3a2f1a;
+    --extra: #e07a6b;
+    --extra-soft: #3a2321;
+    --credit: #6bbf8e;
+    --credit-soft: #1f3126;
+    --shadow: 0 1px 2px rgba(0,0,0,0.3);
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--paper); color: var(--ink);
+    font-family: 'Inter', system-ui, sans-serif; min-height: 100vh;
+  }
+  h1, h2, h3, .display { font-family: 'Oswald', system-ui, sans-serif; text-transform: uppercase; letter-spacing: 0.01em; }
+  .mono { font-family: 'Space Mono', monospace; }
+
+  .wrap { max-width: 980px; margin: 0 auto; padding: 26px 20px 70px; }
+
+  header.top { display: flex; align-items: center; justify-content: space-between; padding-bottom: 18px; margin-bottom: 26px; border-bottom: 2px solid var(--ink); }
+  .brand { display: flex; align-items: center; gap: 10px; }
+  .brand .mark {
+    width: 34px; height: 34px; border-radius: 50%; border: 3px solid var(--ink); position: relative; flex: none;
+  }
+  .brand .mark::before { content: ""; position: absolute; left: 50%; top: 50%; width: 2px; height: 9px; background: var(--ink); transform-origin: bottom center; transform: translate(-50%, -100%) rotate(35deg); }
+  .brand .mark::after { content: ""; position: absolute; left: 50%; top: 50%; width: 2px; height: 6px; background: var(--ink); transform-origin: bottom center; transform: translate(-50%, -100%) rotate(-70deg); }
+  .brand h1 { font-size: 21px; font-weight: 600; margin: 0; }
+
+  button.ghost {
+    border: 1.5px solid var(--ink); background: var(--paper-raised); color: var(--ink);
+    border-radius: var(--radius-s); padding: 7px 13px; font: 600 12.5px 'Inter', sans-serif;
+    cursor: pointer; display: inline-flex; align-items: center; gap: 6px;
+  }
+  button.ghost:hover { background: var(--accent-soft); }
+  button.primary {
+    border: none; background: var(--ink); color: var(--paper);
+    border-radius: var(--radius-s); padding: 10px 18px; font: 700 13px 'Inter', sans-serif;
+    cursor: pointer;
+  }
+  button.primary:hover { background: var(--accent); color: var(--ink); }
+  button.icon-btn {
+    border: 1px solid var(--border); background: var(--paper-raised); color: var(--ink-soft);
+    border-radius: var(--radius-s); width: 30px; height: 30px; cursor: pointer;
+    display: inline-flex; align-items: center; justify-content: center;
+  }
+  button.icon-btn:hover { color: var(--extra); border-color: var(--extra); }
+
+  .hero-copy { max-width: 620px; margin-bottom: 24px; }
+  .hero-copy h2 { font-size: 27px; line-height: 1.2; margin: 0 0 8px; }
+  .hero-copy p { color: var(--ink-soft); font-size: 15px; line-height: 1.55; margin: 0; text-transform: none; }
+
+  .settings-toggle { display: flex; justify-content: flex-end; margin-bottom: 10px; }
+  .settings-panel {
+    display: none; background: var(--paper-raised); border: 1px solid var(--border); border-radius: var(--radius-m);
+    padding: 18px 20px; margin-bottom: 20px; box-shadow: var(--shadow);
+  }
+  .settings-panel.open { display: block; }
+  .settings-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 14px; }
+  .field label { display: block; font-size: 12px; color: var(--ink-soft); margin-bottom: 5px; }
+  .field input {
+    width: 100%; font: 600 14px 'Space Mono', monospace; padding: 8px 10px; border-radius: var(--radius-s);
+    border: 1px solid var(--border); background: var(--paper); color: var(--ink);
+  }
+
+  .card-punch {
+    background: var(--paper-raised); border: 1px solid var(--border); border-radius: var(--radius-m);
+    box-shadow: var(--shadow); overflow: hidden; margin-bottom: 22px; position: relative;
+  }
+  .punch-holes {
+    display: flex; justify-content: space-evenly; padding: 10px 20px 0;
+  }
+  .punch-holes span { width: 9px; height: 9px; border-radius: 50%; background: var(--paper); border: 1.5px solid var(--border); }
+
+  .table-scroll { overflow-x: auto; padding: 14px 4px 18px; }
+  table { border-collapse: collapse; width: 100%; min-width: 720px; font-size: 13.5px; }
+  thead th {
+    text-align: left; padding: 8px 10px; font: 600 11px 'Inter', sans-serif; color: var(--ink-soft);
+    text-transform: uppercase; letter-spacing: 0.04em; border-bottom: 2px solid var(--ink);
+  }
+  tbody td { padding: 6px 10px; border-bottom: 1px dashed var(--border); vertical-align: middle; }
+  tbody tr:last-child td { border-bottom: none; }
+  input.cell {
+    width: 100%; font: 600 13.5px 'Space Mono', monospace; padding: 7px 8px; border-radius: var(--radius-s);
+    border: 1px solid var(--border); background: var(--paper); color: var(--ink); min-width: 92px;
+  }
+  input.cell[type="date"] { min-width: 128px; font-family: 'Inter', sans-serif; font-weight: 500; font-size: 12.5px; }
+  td.result { font: 700 14px 'Space Mono', monospace; white-space: nowrap; }
+  td.result.extra-pos { color: var(--extra); }
+  td.result.credit-pos { color: var(--credit); }
+  td.actions { text-align: center; }
+
+  .add-row { padding: 4px 20px 18px; }
+
+  .summary { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1px; background: var(--border); border: 1px solid var(--border); border-radius: var(--radius-m); overflow: hidden; box-shadow: var(--shadow); margin-bottom: 20px; }
+  .summary .stamp { background: var(--paper-raised); padding: 18px 20px; text-align: center; }
+  .summary .stamp .label { font-size: 11.5px; color: var(--ink-soft); text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 8px; }
+  .summary .stamp .value { font: 700 26px 'Space Mono', monospace; }
+  .summary .stamp.extra .value { color: var(--extra); }
+  .summary .stamp.credit .value { color: var(--credit); }
+  .summary .stamp.deficit .value { color: var(--extra); }
+  .summary .stamp .sub { font-size: 11.5px; color: var(--ink-soft); margin-top: 4px; }
+
+  .toolbar { display: flex; gap: 10px; flex-wrap: wrap; justify-content: flex-end; margin-bottom: 18px; }
+
+  .sim-card { padding: 22px 22px 24px; }
+  .sim-header h3 { font-size: 18px; margin: 0 0 4px; }
+  .sim-header p { text-transform: none; font-size: 13.5px; color: var(--ink-soft); margin: 0 0 18px; max-width: 520px; }
+  .sim-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 18px; margin-bottom: 20px; }
+  .sim-grid .field label { text-transform: none; font-weight: 600; color: var(--ink); font-size: 13px; margin-bottom: 6px; }
+  .field-note { display: block; font-size: 11.5px; color: var(--ink-soft); margin-top: 5px; line-height: 1.4; }
+  .link-btn { background: none; border: none; padding: 0; color: var(--accent); font: 600 11.5px 'Inter', sans-serif; text-decoration: underline; cursor: pointer; }
+  .sim-results { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 14px; border-top: 1px dashed var(--border); padding-top: 18px; }
+  .sim-result { text-align: center; }
+  .sim-result .label { font-size: 11.5px; color: var(--ink-soft); text-transform: uppercase; letter-spacing: 0.03em; margin-bottom: 6px; }
+  .sim-result .value { font: 700 19px 'Space Mono', monospace; }
+  .sim-result.highlight .value { color: var(--accent); font-size: 23px; }
+
+  footer.hint { margin-top: 20px; font-size: 12px; color: var(--ink-soft); text-align: center; }
+  .credit { margin-top: 12px; padding-top: 12px; border-top: 1px dashed var(--border); font-size: 12px; color: var(--ink-soft); }
+  .credit strong { color: var(--ink); font-weight: 600; }
+
+  @media print {
+    .settings-toggle, .settings-panel, .add-row, .toolbar, td.actions, thead th:last-child, .hero-copy { display: none !important; }
+    body { background: #fff; }
+  }
+  @media (max-width: 560px) {
+    .hero-copy h2 { font-size: 22px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="top">
+    <div class="brand">
+      <div class="mark" aria-hidden="true"></div>
+      <h1>Ponto Certo</h1>
+    </div>
+    <button class="ghost" id="themeToggle" type="button">Tema</button>
+  </header>
+
+  <div class="hero-copy">
+    <h2>Calcule horas trabalhadas e horas extras sem complicação</h2>
+    <p>Lance a entrada, o intervalo e a saída de cada dia. O total trabalhado, as horas extras e o saldo do banco de horas são calculados na hora — tudo fica salvo neste navegador.</p>
+  </div>
+
+  <div class="settings-toggle">
+    <button class="ghost" id="settingsToggle" type="button">Configurar jornada padrão</button>
+  </div>
+  <div class="settings-panel" id="settingsPanel">
+    <div class="settings-grid">
+      <div class="field">
+        <label for="jornadaPadrao">Jornada diária padrão</label>
+        <input type="time" id="jornadaPadrao" value="08:00">
+      </div>
+    </div>
+  </div>
+
+  <div class="toolbar">
+    <button class="ghost" id="printBtn" type="button">Imprimir</button>
+    <button class="ghost" id="exportPdfBtn" type="button">Baixar PDF</button>
+    <button class="ghost" id="clearBtn" type="button">Limpar tudo</button>
+  </div>
+
+  <div class="card-punch">
+    <div class="punch-holes" aria-hidden="true">
+      <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+    </div>
+    <div class="table-scroll">
+      <table>
+        <thead>
+          <tr>
+            <th>Data</th>
+            <th>Entrada</th>
+            <th>Saída almoço</th>
+            <th>Volta almoço</th>
+            <th>Saída</th>
+            <th>Trabalhado</th>
+            <th>Extra / falta</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody id="rowsBody"></tbody>
+      </table>
+    </div>
+    <div class="add-row">
+      <button class="ghost" id="addRowBtn" type="button">+ Adicionar dia</button>
+    </div>
+  </div>
+
+  <div class="summary">
+    <div class="stamp">
+      <div class="label">Total trabalhado</div>
+      <div class="value mono" id="totalTrabalhado">00:00</div>
+      <div class="sub" id="totalDias">0 dias lançados</div>
+    </div>
+    <div class="stamp extra">
+      <div class="label">Total de horas extras</div>
+      <div class="value mono" id="totalExtra">00:00</div>
+    </div>
+    <div class="stamp" id="saldoStamp">
+      <div class="label">Saldo do banco de horas</div>
+      <div class="value mono" id="saldoBanco">00:00</div>
+      <div class="sub" id="saldoDetalhe"></div>
+    </div>
+  </div>
+
+  <div class="card-punch sim-card">
+    <div class="sim-header">
+      <h3>Quanto valem minhas horas extras</h3>
+      <p>Informe o salário bruto e a carga horária para estimar o valor das horas extras em reais.</p>
+    </div>
+    <div class="sim-grid">
+      <div class="field">
+        <label for="simSalario">Salário bruto</label>
+        <input type="number" id="simSalario" class="cell" step="0.01" min="0" placeholder="0,00">
+        <span class="field-note">Salário registrado na carteira, sem descontar INSS e IR.</span>
+      </div>
+      <div class="field">
+        <label for="simCarga">Carga horária mensal (horas)</label>
+        <input type="number" id="simCarga" class="cell" step="1" min="1" value="220">
+        <span class="field-note">Se não souber, multiplique as horas semanais por 5 — 44h semanais ≈ 220h mensais.</span>
+      </div>
+      <div class="field">
+        <label for="simPercentual">% da hora extra</label>
+        <input type="number" id="simPercentual" class="cell" step="1" min="0" value="50">
+        <span class="field-note">Mínimo de 50% em dias normais; 100% aos domingos e feriados.</span>
+      </div>
+      <div class="field">
+        <label for="simQuantidade">Quantidade de horas extras (hh:mm)</label>
+        <input type="text" id="simQuantidade" class="cell" placeholder="00:00">
+        <span class="field-note"><button type="button" id="useCalculatedBtn" class="link-btn">Usar total calculado acima</button></span>
+      </div>
+    </div>
+    <div class="sim-results">
+      <div class="sim-result">
+        <div class="label">Valor da hora normal</div>
+        <div class="value mono" id="simHoraNormal">R$ 0,00</div>
+      </div>
+      <div class="sim-result">
+        <div class="label">Valor da hora extra</div>
+        <div class="value mono" id="simHoraExtra">R$ 0,00</div>
+      </div>
+      <div class="sim-result highlight">
+        <div class="label">Valor total das horas extras</div>
+        <div class="value mono" id="simValorTotal">R$ 0,00</div>
+      </div>
+    </div>
+  </div>
+
+  <footer class="hint">Os dados ficam salvos apenas neste navegador — nada é enviado para nenhum servidor.
+    <div class="credit">Desenvolvido por <strong>Andreia Brandborg</strong> · Para dúvidas, sugestões ou orçamentos, entre em contato: <a href="mailto:andreiabrandborg@gmail.com" style="color:inherit;">andreiabrandborg@gmail.com</a> <span style="opacity:0.5;">· build 2026-09-18-diag1</span></div>
+  </footer>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  // ---------- theme ----------
+  function applyStoredTheme(){
+    try {
+      var t = localStorage.getItem('ponto-theme');
+      if (t === 'light' || t === 'dark') document.documentElement.setAttribute('data-theme', t);
+    } catch(e) {}
+  }
+  applyStoredTheme();
+  document.getElementById('themeToggle').addEventListener('click', function(){
+    var current = document.documentElement.getAttribute('data-theme');
+    var next = current === 'dark' ? 'light' : (current === 'light' ? 'dark' : (matchMedia('(prefers-color-scheme: dark)').matches ? 'light' : 'dark'));
+    document.documentElement.setAttribute('data-theme', next);
+    try { localStorage.setItem('ponto-theme', next); } catch(e) {}
+  });
+
+  // ---------- settings toggle ----------
+  var settingsPanel = document.getElementById('settingsPanel');
+  document.getElementById('settingsToggle').addEventListener('click', function(){
+    settingsPanel.classList.toggle('open');
+  });
+
+  // ---------- time helpers ----------
+  function parseTimeToMinutes(str){
+    if (!str) return null;
+    var parts = str.split(':');
+    if (parts.length < 2) return null;
+    var h = parseInt(parts[0], 10), m = parseInt(parts[1], 10);
+    if (isNaN(h) || isNaN(m)) return null;
+    return h * 60 + m;
+  }
+
+  function formatMinutesSigned(mins){
+    var sign = mins < 0 ? '-' : '';
+    var abs = Math.abs(Math.round(mins));
+    var h = Math.floor(abs / 60), m = abs % 60;
+    return sign + String(h).padStart(2, '0') + ':' + String(m).padStart(2, '0');
+  }
+
+  function formatMinutes(mins){
+    var abs = Math.max(0, Math.round(mins));
+    var h = Math.floor(abs / 60), m = abs % 60;
+    return String(h).padStart(2, '0') + ':' + String(m).padStart(2, '0');
+  }
+
+  function calcWorkedMinutes(entrada, saidaAlmoco, voltaAlmoco, saidaFinal){
+    var eMin = parseTimeToMinutes(entrada);
+    var sfMin = parseTimeToMinutes(saidaFinal);
+    if (eMin === null || sfMin === null) return null;
+
+    var saMin = parseTimeToMinutes(saidaAlmoco);
+    var vaMin = parseTimeToMinutes(voltaAlmoco);
+
+    if (saMin !== null && vaMin !== null){
+      var morning = saMin - eMin; if (morning < 0) morning += 24 * 60;
+      var afternoon = sfMin - vaMin; if (afternoon < 0) afternoon += 24 * 60;
+      return morning + afternoon;
+    }
+    var total = sfMin - eMin; if (total < 0) total += 24 * 60;
+    return total;
+  }
+
+  // ---------- state ----------
+  var rows = [];
+  var rowIdSeq = 1;
+
+  function newRow(data){
+    return Object.assign({ id: rowIdSeq++, data: '', entrada: '', saidaAlmoco: '', voltaAlmoco: '', saidaFinal: '' }, data || {});
+  }
+
+  function todayISO(){
+    var d = new Date();
+    return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+  }
+
+  // ---------- persistence ----------
+  function saveState(){
+    try {
+      localStorage.setItem('ponto-rows', JSON.stringify(rows));
+      localStorage.setItem('ponto-settings', JSON.stringify({
+        jornada: document.getElementById('jornadaPadrao').value,
+        simSalario: document.getElementById('simSalario').value,
+        simCarga: document.getElementById('simCarga').value,
+        simPercentual: document.getElementById('simPercentual').value,
+        simQuantidade: document.getElementById('simQuantidade').value
+      }));
+    } catch(e) {}
+  }
+
+  function loadState(){
+    try {
+      var savedRows = localStorage.getItem('ponto-rows');
+      var savedSettings = localStorage.getItem('ponto-settings');
+      if (savedSettings){
+        var s = JSON.parse(savedSettings);
+        if (s.jornada) document.getElementById('jornadaPadrao').value = s.jornada;
+        if (s.simSalario) document.getElementById('simSalario').value = s.simSalario;
+        if (s.simCarga) document.getElementById('simCarga').value = s.simCarga;
+        if (s.simPercentual) document.getElementById('simPercentual').value = s.simPercentual;
+        if (s.simQuantidade) document.getElementById('simQuantidade').value = s.simQuantidade;
+      }
+      if (savedRows){
+        var parsed = JSON.parse(savedRows);
+        if (Array.isArray(parsed) && parsed.length){
+          rows = parsed.map(function(r){ rowIdSeq = Math.max(rowIdSeq, (r.id||0)+1); return r; });
+          return;
+        }
+      }
+    } catch(e) {}
+    rows = [newRow({ data: todayISO() })];
+  }
+
+  // ---------- rendering ----------
+  var rowsBody = document.getElementById('rowsBody');
+
+  function renderRows(){
+    rowsBody.innerHTML = '';
+    rows.forEach(function(row){
+      var tr = document.createElement('tr');
+      tr.dataset.id = row.id;
+
+      var worked = calcWorkedMinutes(row.entrada, row.saidaAlmoco, row.voltaAlmoco, row.saidaFinal);
+      var jornadaPadrao = parseTimeToMinutes(document.getElementById('jornadaPadrao').value) || 480;
+      var diff = worked !== null ? worked - jornadaPadrao : null;
+
+      tr.innerHTML =
+        '<td><input class="cell" type="date" data-field="data" value="' + row.data + '"></td>' +
+        '<td><input class="cell" type="time" data-field="entrada" value="' + row.entrada + '"></td>' +
+        '<td><input class="cell" type="time" data-field="saidaAlmoco" value="' + row.saidaAlmoco + '"></td>' +
+        '<td><input class="cell" type="time" data-field="voltaAlmoco" value="' + row.voltaAlmoco + '"></td>' +
+        '<td><input class="cell" type="time" data-field="saidaFinal" value="' + row.saidaFinal + '"></td>' +
+        '<td class="result">' + (worked !== null ? formatMinutes(worked) : '—') + '</td>' +
+        '<td class="result' + (diff !== null && diff > 0 ? ' extra-pos' : diff !== null && diff < 0 ? ' credit-pos' : '') + '">' + (diff !== null ? formatMinutesSigned(diff) : '—') + '</td>' +
+        '<td class="actions"><button class="icon-btn" data-action="remove" aria-label="Remover dia">✕</button></td>';
+
+      rowsBody.appendChild(tr);
+    });
+  }
+
+  var lastTotalExtraMinutes = 0;
+
+  function renderSummary(){
+    var jornadaPadrao = parseTimeToMinutes(document.getElementById('jornadaPadrao').value) || 480;
+
+    var totalWorked = 0, totalExtra = 0, totalFalta = 0, diasComputados = 0;
+    rows.forEach(function(row){
+      var worked = calcWorkedMinutes(row.entrada, row.saidaAlmoco, row.voltaAlmoco, row.saidaFinal);
+      if (worked === null) return;
+      diasComputados++;
+      totalWorked += worked;
+      var diff = worked - jornadaPadrao;
+      if (diff > 0) totalExtra += diff; else totalFalta += -diff;
+    });
+
+    document.getElementById('totalTrabalhado').textContent = formatMinutes(totalWorked);
+    document.getElementById('totalDias').textContent = diasComputados + (diasComputados === 1 ? ' dia lançado' : ' dias lançados');
+    document.getElementById('totalExtra').textContent = formatMinutes(totalExtra);
+    lastTotalExtraMinutes = totalExtra;
+
+    var saldo = totalExtra - totalFalta;
+    var saldoEl = document.getElementById('saldoBanco');
+    var saldoStamp = document.getElementById('saldoStamp');
+    saldoStamp.classList.remove('credit', 'deficit');
+    saldoEl.textContent = formatMinutesSigned(saldo);
+    if (saldo > 0) saldoStamp.classList.add('credit');
+    else if (saldo < 0) saldoStamp.classList.add('deficit');
+    document.getElementById('saldoDetalhe').textContent = saldo >= 0 ? 'crédito acumulado' : 'a compensar';
+  }
+
+  function formatBRL(n){
+    return 'R$ ' + n.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  }
+
+  function renderSimulation(){
+    var salario = parseFloat(document.getElementById('simSalario').value) || 0;
+    var carga = parseFloat(document.getElementById('simCarga').value) || 0;
+    var percentual = parseFloat(document.getElementById('simPercentual').value) || 0;
+    var qtdMinutes = parseTimeToMinutes(document.getElementById('simQuantidade').value) || 0;
+
+    var horaNormal = carga > 0 ? salario / carga : 0;
+    var horaExtra = horaNormal * (1 + percentual / 100);
+    var valorTotal = horaExtra * (qtdMinutes / 60);
+
+    document.getElementById('simHoraNormal').textContent = formatBRL(horaNormal);
+    document.getElementById('simHoraExtra').textContent = formatBRL(horaExtra);
+    document.getElementById('simValorTotal').textContent = formatBRL(valorTotal);
+  }
+
+  function renderAll(){
+    renderRows();
+    renderSummary();
+    renderSimulation();
+    saveState();
+  }
+
+  // ---------- events ----------
+  rowsBody.addEventListener('input', function(e){
+    var target = e.target;
+    if (!target.classList.contains('cell')) return;
+    var tr = target.closest('tr');
+    var id = parseInt(tr.dataset.id, 10);
+    var row = rows.find(function(r){ return r.id === id; });
+    if (!row) return;
+    row[target.getAttribute('data-field')] = target.value;
+    renderSummary();
+    var worked = calcWorkedMinutes(row.entrada, row.saidaAlmoco, row.voltaAlmoco, row.saidaFinal);
+    var jornadaPadrao = parseTimeToMinutes(document.getElementById('jornadaPadrao').value) || 480;
+    var diff = worked !== null ? worked - jornadaPadrao : null;
+    var resultCells = tr.querySelectorAll('td.result');
+    resultCells[0].textContent = worked !== null ? formatMinutes(worked) : '—';
+    resultCells[1].textContent = diff !== null ? formatMinutesSigned(diff) : '—';
+    resultCells[1].classList.remove('extra-pos', 'credit-pos');
+    if (diff !== null && diff > 0) resultCells[1].classList.add('extra-pos');
+    else if (diff !== null && diff < 0) resultCells[1].classList.add('credit-pos');
+    saveState();
+  });
+
+  rowsBody.addEventListener('click', function(e){
+    var btn = e.target.closest('button[data-action="remove"]');
+    if (!btn) return;
+    var tr = btn.closest('tr');
+    var id = parseInt(tr.dataset.id, 10);
+    rows = rows.filter(function(r){ return r.id !== id; });
+    if (!rows.length) rows.push(newRow({ data: todayISO() }));
+    renderAll();
+  });
+
+  document.getElementById('addRowBtn').addEventListener('click', function(){
+    var last = rows[rows.length - 1];
+    var nextDate = '';
+    if (last && last.data){
+      var d = new Date(last.data + 'T00:00:00');
+      d.setDate(d.getDate() + 1);
+      nextDate = d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+    } else {
+      nextDate = todayISO();
+    }
+    rows.push(newRow({ data: nextDate }));
+    renderAll();
+  });
+
+  document.getElementById('clearBtn').addEventListener('click', function(){
+    rows = [newRow({ data: todayISO() })];
+    renderAll();
+  });
+
+  document.getElementById('printBtn').addEventListener('click', function(){ window.print(); });
+  document.getElementById('exportPdfBtn').addEventListener('click', exportPDF);
+
+  function loadScriptOnce(url){
+    return new Promise(function(resolve){
+      var s = document.createElement('script');
+      s.src = url;
+      s.onload = function(){ resolve(true); };
+      s.onerror = function(){ resolve(false); };
+      document.head.appendChild(s);
+    });
+  }
+
+  function notify(msg, isError){
+    var existing = document.getElementById('pontoToast');
+    if (existing) existing.remove();
+    var toast = document.createElement('div');
+    toast.id = 'pontoToast';
+    toast.textContent = msg;
+    toast.style.cssText = 'position:fixed; left:50%; bottom:24px; transform:translateX(-50%); z-index:9999;' +
+      'max-width:90vw; padding:12px 18px; border-radius:8px; font:600 13.5px Inter, sans-serif; text-align:center;' +
+      'box-shadow:0 8px 24px rgba(0,0,0,0.35); color:#fff;' +
+      (isError ? 'background:#b33a3a;' : 'background:#2f7a4f;');
+    document.body.appendChild(toast);
+    setTimeout(function(){ if (toast.parentNode) toast.remove(); }, 6000);
+  }
+
+  // Universal downloader: uses Claude's native download confirmation when running
+  // inside claude.ai, and falls back to a standard browser download anywhere else
+  // (e.g. when this page is hosted on its own domain).
+  async function getDownloader(){
+    if (window.claude && window.claude.use){
+      try {
+        var d = await window.claude.use('downloads');
+        if (d && d.save) return d;
+      } catch(e){ /* fall through to standard download */ }
+    }
+    return {
+      save: async function(opts){
+        var url = URL.createObjectURL(opts.data);
+        var a = document.createElement('a');
+        a.href = url;
+        a.download = opts.filename;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        setTimeout(function(){ URL.revokeObjectURL(url); }, 4000);
+        return true;
+      }
+    };
+  }
+
+  async function exportPDF(){
+    var btn = document.getElementById('exportPdfBtn');
+    var originalLabel = btn.innerHTML;
+    var downloads = await getDownloader();
+
+    var jsPDFCtor = window.jspdf && window.jspdf.jsPDF;
+    if (!jsPDFCtor){
+      notify('Carregando o gerador de PDF de um servidor alternativo…', false);
+      await loadScriptOnce('https://cdn.jsdelivr.net/npm/jspdf@2.5.2/dist/jspdf.umd.min.js');
+      jsPDFCtor = window.jspdf && window.jspdf.jsPDF;
+    }
+    if (!jsPDFCtor) { notify('Não foi possível carregar o gerador de PDF. Recarregue a página e tente novamente.', true); return; }
+
+    btn.disabled = true;
+    btn.innerHTML = 'Gerando…';
+
+    try {
+      var INK = [30, 37, 48], SOFT = [92, 102, 114], AMBER = [193, 120, 23], EXTRA = [179, 58, 58], CREDIT = [47, 122, 79], LINE = [221, 215, 200];
+      var doc = new jsPDFCtor({ orientation: 'landscape', unit: 'pt', format: 'a4' });
+      var PW = doc.internal.pageSize.getWidth(), PH = doc.internal.pageSize.getHeight();
+
+      doc.setFillColor(255,255,255); doc.rect(0,0,PW,PH,'F');
+      doc.setTextColor(INK[0],INK[1],INK[2]); doc.setFont('helvetica','bold'); doc.setFontSize(22);
+      doc.text('PONTO CERTO', 40, 42);
+      doc.setFont('helvetica','normal'); doc.setFontSize(11); doc.setTextColor(SOFT[0],SOFT[1],SOFT[2]);
+      doc.text('Calculadora de horas trabalhadas e horas extras — gerado em ' + new Date().toLocaleDateString('pt-BR'), 40, 60);
+      doc.setDrawColor(INK[0],INK[1],INK[2]); doc.setLineWidth(1.4); doc.line(40, 72, PW - 40, 72);
+
+      // table
+      var headers = ['Data', 'Entrada', 'Saída almoço', 'Volta almoço', 'Saída', 'Trabalhado', 'Extra/falta'];
+      var colW = (PW - 80) / headers.length;
+      var top = 95, rowH = 20;
+      doc.setFontSize(9.5);
+      headers.forEach(function(h, i){
+        doc.setFillColor(245,243,236);
+        doc.rect(40 + i*colW, top, colW, rowH, 'F');
+        doc.setTextColor(INK[0],INK[1],INK[2]); doc.setFont('helvetica','bold');
+        doc.text(h, 40 + i*colW + 6, top + 14);
+      });
+      var jornadaPadrao = parseTimeToMinutes(document.getElementById('jornadaPadrao').value) || 480;
+      rows.forEach(function(row, r){
+        var y = top + rowH * (r + 1);
+        var worked = calcWorkedMinutes(row.entrada, row.saidaAlmoco, row.voltaAlmoco, row.saidaFinal);
+        var diff = worked !== null ? worked - jornadaPadrao : null;
+        var cells = [
+          row.data ? new Date(row.data + 'T00:00:00').toLocaleDateString('pt-BR') : '—',
+          row.entrada || '—', row.saidaAlmoco || '—', row.voltaAlmoco || '—', row.saidaFinal || '—',
+          worked !== null ? formatMinutes(worked) : '—',
+          diff !== null ? formatMinutesSigned(diff) : '—'
+        ];
+        cells.forEach(function(text, i){
+          doc.setDrawColor(LINE[0],LINE[1],LINE[2]);
+          doc.rect(40 + i*colW, y, colW, rowH, 'S');
+          if (i === 6 && diff !== null){
+            doc.setTextColor(diff > 0 ? EXTRA[0] : diff < 0 ? CREDIT[0] : INK[0], diff > 0 ? EXTRA[1] : diff < 0 ? CREDIT[1] : INK[1], diff > 0 ? EXTRA[2] : diff < 0 ? CREDIT[2] : INK[2]);
+            doc.setFont('courier','bold');
+          } else {
+            doc.setTextColor(INK[0],INK[1],INK[2]); doc.setFont('courier','normal');
+          }
+          doc.text(String(text), 40 + i*colW + 6, y + 14);
+        });
+      });
+
+      var afterTableY = top + rowH * (rows.length + 1) + 26;
+      if (afterTableY > PH - 90) { doc.addPage(); afterTableY = 50; doc.setFillColor(255,255,255); doc.rect(0,0,PW,PH,'F'); }
+
+      // summary
+      doc.setFont('helvetica','bold'); doc.setFontSize(13); doc.setTextColor(INK[0],INK[1],INK[2]);
+      doc.text('Resumo', 40, afterTableY);
+      var totalTrabalhado = document.getElementById('totalTrabalhado').textContent;
+      var totalExtra = document.getElementById('totalExtra').textContent;
+      var saldoBanco = document.getElementById('saldoBanco').textContent;
+      doc.setFontSize(10.5); doc.setFont('helvetica','normal'); doc.setTextColor(SOFT[0],SOFT[1],SOFT[2]);
+      doc.text('Total trabalhado: ' + totalTrabalhado + '   |   Total de horas extras: ' + totalExtra + '   |   Saldo do banco de horas: ' + saldoBanco, 40, afterTableY + 18);
+
+      var simSalario = document.getElementById('simSalario').value;
+      var simValorTotal = document.getElementById('simValorTotal').textContent;
+      if (simSalario){
+        doc.text('Valor estimado das horas extras: ' + simValorTotal, 40, afterTableY + 36);
+      }
+
+      var blob = doc.output('blob');
+      var res = await downloads.save({ filename: 'ponto-certo.pdf', data: blob });
+      if (res) notify('PDF gerado! Confira a caixa de downloads do navegador.', false);
+    } catch(err){
+      if (!(err && err.code === 'declined')){
+        console.error(err);
+        notify('Não foi possível gerar o PDF: ' + (err && err.message ? err.message : 'erro desconhecido'), true);
+      }
+    } finally {
+      btn.disabled = false;
+      btn.innerHTML = originalLabel;
+    }
+  }
+
+  document.getElementById('jornadaPadrao').addEventListener('input', renderAll);
+
+  ['simSalario', 'simCarga', 'simPercentual', 'simQuantidade'].forEach(function(id){
+    document.getElementById(id).addEventListener('input', function(){ renderSimulation(); saveState(); });
+  });
+
+  document.getElementById('useCalculatedBtn').addEventListener('click', function(){
+    document.getElementById('simQuantidade').value = formatMinutes(lastTotalExtraMinutes);
+    renderSimulation();
+    saveState();
+  });
+
+  // ---------- init ----------
+  loadState();
+  renderAll();
+})();
+</script>
+</body>
+</html>

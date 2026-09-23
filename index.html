@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<title>Gestão Fácil</title>
+<meta name="description" content="Ferramentas simples para organizar suas finanças e suas horas de trabalho.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #16233d;
+    --ink-soft: #5b6b85;
+    --paper: #f4f5f8;
+    --paper-raised: #ffffff;
+    --border: #e1e4ea;
+    --accent: #2f5fe0;
+    --accent-soft: #e8edfc;
+    --shadow: 0 1px 2px rgba(16,24,40,0.04), 0 1px 1px rgba(16,24,40,0.03);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --ink: #e7eaf0; --ink-soft: #8d98ae; --paper: #0d1320; --paper-raised: #151c2b;
+      --border: #262f47; --accent: #6d8dff; --accent-soft: #1c2740; --shadow: 0 1px 2px rgba(0,0,0,0.25);
+    }
+  }
+  :root[data-theme="dark"] {
+    --ink: #e7eaf0; --ink-soft: #8d98ae; --paper: #0d1320; --paper-raised: #151c2b;
+    --border: #262f47; --accent: #6d8dff; --accent-soft: #1c2740; --shadow: 0 1px 2px rgba(0,0,0,0.25);
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--paper); color: var(--ink); font-family: 'Inter', system-ui, sans-serif; min-height: 100vh; }
+  h1, h2, .display { font-family: 'Space Grotesk', system-ui, sans-serif; }
+
+  .wrap { max-width: 900px; margin: 0 auto; padding: 60px 20px 80px; }
+  header { text-align: center; margin-bottom: 48px; }
+  header .mark { width: 46px; height: 46px; background: var(--accent); border-radius: 12px; margin: 0 auto 18px; }
+  header h1 { font-size: 30px; margin: 0 0 10px; letter-spacing: -0.02em; }
+  header p { color: var(--ink-soft); font-size: 15.5px; max-width: 480px; margin: 0 auto; line-height: 1.5; }
+
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
+  a.card {
+    display: block; background: var(--paper-raised); border: 1px solid var(--border); border-radius: 14px;
+    padding: 28px; text-decoration: none; color: inherit; box-shadow: var(--shadow);
+    transition: transform .15s ease, box-shadow .15s ease;
+  }
+  a.card:hover { transform: translateY(-3px); box-shadow: 0 12px 28px -8px rgba(16,24,40,0.18); }
+  a.card .icon {
+    width: 46px; height: 46px; border-radius: 10px; background: var(--accent-soft); color: var(--accent);
+    display: flex; align-items: center; justify-content: center; margin-bottom: 16px;
+  }
+  a.card h2 { font-size: 19px; margin: 0 0 8px; }
+  a.card p { color: var(--ink-soft); font-size: 14px; line-height: 1.5; margin: 0 0 14px; }
+  a.card .cta { font-size: 13px; font-weight: 600; color: var(--accent); }
+
+  footer { text-align: center; margin-top: 56px; font-size: 12.5px; color: var(--ink-soft); }
+  footer a { color: inherit; }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="mark" aria-hidden="true"></div>
+      <h1>Gestão Fácil</h1>
+      <p>Ferramentas simples para organizar suas finanças e suas horas de trabalho — direto no navegador, sem instalar nada.</p>
+    </header>
+
+    <div class="grid">
+      <a class="card" href="./painel-financeiro/">
+        <div class="icon" aria-hidden="true">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V10M12 20V4M20 20v-7"/></svg>
+        </div>
+        <h2>Painel Financeiro</h2>
+        <p>Importe planilhas de recebimentos e pagamentos e veja indicadores, gráficos e comparações geradas automaticamente.</p>
+        <div class="cta">Abrir painel →</div>
+      </a>
+
+      <a class="card" href="./ponto-certo/">
+        <div class="icon" aria-hidden="true">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
+        </div>
+        <h2>Ponto Certo</h2>
+        <p>Calcule horas trabalhadas, horas extras e o saldo do banco de horas — e simule quanto valem em reais.</p>
+        <div class="cta">Abrir calculadora →</div>
+      </a>
+    </div>
+
+    <footer>
+      Desenvolvido por Andreia Brandborg · <a href="mailto:andreiabrandborg@gmail.com">andreiabrandborg@gmail.com</a>
+    </footer>
+  </div>
+</body>
+</html>
