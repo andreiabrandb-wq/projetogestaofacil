@@ -41,4 +41,174 @@
     --shadow-card: 0 18px 40px -18px rgba(0,0,0,0.55);
   }
   * { box-sizing: border-box; }
-  body
+  body {
+    margin: 0; background: var(--paper); color: var(--ink); font-family: 'Inter', system-ui, sans-serif;
+  }
+  h1, h2, .display { font-family: 'Space Grotesk', system-ui, sans-serif; }
+  a { color: inherit; }
+
+  /* ---------- nav ---------- */
+  nav.top {
+    display: flex; align-items: center; justify-content: space-between;
+    max-width: 1180px; margin: 0 auto; padding: 20px 24px;
+  }
+  nav.top .brand { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 17px; letter-spacing: -0.01em; }
+  nav.top .brand .mark {
+    width: 30px; height: 30px; border-radius: 9px; background: linear-gradient(135deg, var(--accent), #6ea0ff);
+    flex: none;
+  }
+  nav.top .cta-small {
+    background: var(--gold); color: var(--gold-ink); font-weight: 700; font-size: 13.5px;
+    padding: 9px 18px; border-radius: 8px; text-decoration: none; box-shadow: 0 4px 14px -4px rgba(242,183,5,0.5);
+  }
+
+  /* ---------- hero ---------- */
+  .hero {
+    position: relative; overflow: hidden; border-radius: 0 0 28px 28px; margin: 0 auto; max-width: 1180px;
+    padding: 84px 32px 76px; text-align: center; isolation: isolate;
+  }
+  .hero::before {
+    content: ""; position: absolute; inset: 0; z-index: -2;
+    background-image: url("https://images.unsplash.com/photo-1521791136064-7986c2920216?auto=format&fit=crop&w=1600&q=75");
+    background-size: cover; background-position: center 30%;
+  }
+  .hero::after {
+    content: ""; position: absolute; inset: 0; z-index: -1;
+    background:
+      linear-gradient(180deg, rgba(8,16,38,0.86) 0%, rgba(10,20,48,0.82) 45%, rgba(12,24,56,0.92) 100%),
+      radial-gradient(700px 400px at 50% 0%, rgba(47,95,224,0.28), transparent 70%);
+  }
+  .hero .eyebrow {
+    display: inline-block; color: #cfe0ff; font-size: 13px; font-weight: 600; letter-spacing: 0.04em;
+    text-transform: uppercase; background: rgba(255,255,255,0.10); border: 1px solid rgba(255,255,255,0.18);
+    padding: 6px 14px; border-radius: 999px; margin-bottom: 22px;
+  }
+  .hero h1 {
+    color: #ffffff; font-size: 42px; line-height: 1.15; letter-spacing: -0.02em; margin: 0 0 16px;
+    text-shadow: 0 2px 18px rgba(0,0,0,0.35); max-width: 780px; margin-left: auto; margin-right: auto;
+  }
+  .hero p {
+    color: #d7e0fa; font-size: 17px; line-height: 1.6; max-width: 560px; margin: 0 auto 32px;
+  }
+  .hero .cta-row { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; margin-bottom: 38px; }
+  .btn-gold {
+    background: var(--gold); color: var(--gold-ink); font-weight: 700; font-size: 15px;
+    padding: 14px 28px; border-radius: 10px; text-decoration: none; box-shadow: 0 10px 24px -8px rgba(242,183,5,0.55);
+    transition: transform .15s ease;
+  }
+  .btn-gold:hover { transform: translateY(-2px); }
+  .btn-ghost-light {
+    background: rgba(255,255,255,0.08); color: #fff; font-weight: 600; font-size: 15px;
+    padding: 14px 26px; border-radius: 10px; text-decoration: none; border: 1px solid rgba(255,255,255,0.35);
+  }
+  .hero .trust {
+    display: flex; gap: 28px; justify-content: center; flex-wrap: wrap; font-size: 13.5px; color: #b9c7ec;
+  }
+  .hero .trust span { display: inline-flex; align-items: center; gap: 7px; }
+  .hero .trust svg { width: 16px; height: 16px; color: #7fe0c2; flex: none; }
+
+  /* ---------- tools ---------- */
+  .tools { max-width: 1180px; margin: 0 auto; padding: 74px 24px 40px; }
+  .tools .head { text-align: center; max-width: 560px; margin: 0 auto 42px; }
+  .tools .head .kicker { color: var(--accent); font-weight: 700; font-size: 13px; letter-spacing: 0.05em; text-transform: uppercase; margin-bottom: 10px; }
+  .tools .head h2 { font-size: 30px; margin: 0 0 10px; letter-spacing: -0.02em; }
+  .tools .head p { color: var(--ink-soft); font-size: 15.5px; line-height: 1.55; margin: 0; }
+
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 22px; }
+  a.card {
+    display: block; background: var(--paper-raised); border: 1px solid var(--border); border-radius: 16px;
+    padding: 30px; text-decoration: none; color: inherit; box-shadow: var(--shadow-card);
+    transition: transform .18s ease, box-shadow .18s ease; position: relative; overflow: hidden;
+  }
+  a.card::before {
+    content: ""; position: absolute; top: 0; left: 0; right: 0; height: 4px;
+    background: linear-gradient(90deg, var(--accent), var(--gold));
+    transform: scaleX(0); transform-origin: left; transition: transform .25s ease;
+  }
+  a.card:hover { transform: translateY(-4px); box-shadow: 0 24px 46px -16px rgba(15,28,61,0.32); }
+  a.card:hover::before { transform: scaleX(1); }
+  a.card .icon {
+    width: 48px; height: 48px; border-radius: 12px; background: var(--accent-soft); color: var(--accent);
+    display: flex; align-items: center; justify-content: center; margin-bottom: 18px;
+  }
+  a.card h3 { font-size: 20px; margin: 0 0 9px; font-family: 'Space Grotesk', system-ui, sans-serif; }
+  a.card p { color: var(--ink-soft); font-size: 14.5px; line-height: 1.55; margin: 0 0 16px; }
+  a.card .cta { font-size: 13px; font-weight: 700; color: var(--accent); display: inline-flex; align-items: center; gap: 5px; }
+
+  footer { text-align: center; margin: 50px auto 0; padding: 26px 20px 50px; font-size: 12.5px; color: var(--ink-soft); }
+  footer a { color: inherit; }
+
+  @media (max-width: 560px) {
+    .hero { padding: 64px 20px 54px; border-radius: 0 0 20px 20px; }
+    .hero h1 { font-size: 30px; }
+  }
+</style>
+</head>
+<body>
+
+  <nav class="top">
+    <div class="brand">
+      <div class="mark" aria-hidden="true"></div>
+      Gestão Fácil
+    </div>
+    <a class="cta-small" href="#ferramentas">Ver ferramentas</a>
+  </nav>
+
+  <header class="hero">
+    <span class="eyebrow">100% gratuito · direto no navegador</span>
+    <h1>Não é só para gerir o seu negócio. É para organizar a sua vida.</h1>
+    <p>No trabalho, em casa e na sua saúde — ferramentas simples que cabem no seu dia a dia, direto no navegador, sem precisar instalar nada.</p>
+    <div class="cta-row">
+      <a class="btn-gold" href="#ferramentas">Ver ferramentas →</a>
+      <a class="btn-ghost-light" href="./painel-financeiro/">Abrir Painel Financeiro</a>
+    </div>
+    <div class="trust">
+      <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Sem cadastro</span>
+      <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Seus dados ficam no seu navegador</span>
+      <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Uso gratuito</span>
+    </div>
+  </header>
+
+  <section class="tools" id="ferramentas">
+    <div class="head">
+      <div class="kicker">Nossas ferramentas</div>
+      <h2>Escolha o que você precisa hoje</h2>
+      <p>Ferramentas simples que resolvem tarefas do dia a dia — sem planilhas complicadas.</p>
+    </div>
+
+    <div class="grid">
+      <a class="card" href="./painel-financeiro/">
+        <div class="icon" aria-hidden="true">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V10M12 20V4M20 20v-7"/></svg>
+        </div>
+        <h3>Painel Financeiro</h3>
+        <p>Importe planilhas de recebimentos e pagamentos e veja indicadores, gráficos e comparações geradas automaticamente.</p>
+        <div class="cta">Abrir painel →</div>
+      </a>
+
+      <a class="card" href="./ponto-certo/">
+        <div class="icon" aria-hidden="true">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
+        </div>
+        <h3>Ponto Certo</h3>
+        <p>Calcule horas trabalhadas, horas extras e o saldo do banco de horas — e simule quanto valem em reais.</p>
+        <div class="cta">Abrir calculadora →</div>
+      </a>
+
+      <a class="card" href="./orcamento-em-dia/">
+        <div class="icon" aria-hidden="true">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="14" rx="2"/><path d="M2 10h20M6 15h4"/></svg>
+        </div>
+        <h3>Orçamento em Dia</h3>
+        <p>Organize seus gastos, defina metas e acompanhe seu orçamento mensal de forma simples — no trabalho ou em casa.</p>
+        <div class="cta">Abrir orçamento →</div>
+      </a>
+    </div>
+  </section>
+
+  <footer>
+    Desenvolvido por Andreia Brandborg · <a href="mailto:andreiabrandborg@gmail.com">andreiabrandborg@gmail.com</a>
+  </footer>
+
+</body>
+</html>
