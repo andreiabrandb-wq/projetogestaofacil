@@ -8,7 +8,6 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.2/jspdf.umd.min.js"></script>
 <style>
   :root {
     --ink: #0f1c3d; --ink-soft: #56628a; --paper: #f5f7fd; --paper-raised: #ffffff;
@@ -228,6 +227,28 @@
   "use strict";
 
   var currentDoc = null; // { type: 'nfe'|'nfse', data: {...} }
+
+  function loadScriptOnce(url){
+    return new Promise(function(resolve){
+      var s = document.createElement('script');
+      s.src = url;
+      s.onload = function(){ resolve(true); };
+      s.onerror = function(){ resolve(false); };
+      document.head.appendChild(s);
+    });
+  }
+
+  async function ensureJsPDF(){
+    var ctor = window.jspdf && window.jspdf.jsPDF;
+    if (ctor) return ctor;
+    await loadScriptOnce('https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.2/jspdf.umd.min.js');
+    ctor = window.jspdf && window.jspdf.jsPDF;
+    if (ctor) return ctor;
+    showOk && showOk('Carregando o gerador de PDF de um servidor alternativo…');
+    await loadScriptOnce('https://cdn.jsdelivr.net/npm/jspdf@2.5.2/dist/jspdf.umd.min.js');
+    ctor = window.jspdf && window.jspdf.jsPDF;
+    return ctor || null;
+  }
 
   // ---------- import mode toggle ----------
   document.querySelectorAll('.tabs-import button').forEach(function(btn){
@@ -584,11 +605,21 @@
   document.getElementById('btnPrint').addEventListener('click', function(){ window.print(); });
 
   // ---------- PDF export ----------
-  document.getElementById('btnPdf').addEventListener('click', function(){
+  document.getElementById('btnPdf').addEventListener('click', async function(){
     if (!currentDoc){ showError('Leia um XML antes de gerar o PDF.'); return; }
-    var jsPDFCtor = window.jspdf && window.jspdf.jsPDF;
-    if (!jsPDFCtor){ showError('Não foi possível carregar o gerador de PDF. Recarregue a página.'); return; }
+    var btnPdf = document.getElementById('btnPdf');
+    var originalLabel = btnPdf.innerHTML;
+    btnPdf.disabled = true;
+    btnPdf.innerHTML = 'Gerando…';
 
+    var jsPDFCtor = await ensureJsPDF();
+    if (!jsPDFCtor){
+      btnPdf.disabled = false; btnPdf.innerHTML = originalLabel;
+      showError('Não foi possível carregar o gerador de PDF. Verifique sua conexão e tente novamente.');
+      return;
+    }
+
+    try {
     var INK = [15,28,61], SOFT = [86,98,138], ACCENT = [47,95,224], LINE = [226,230,245];
     var doc = new jsPDFCtor({ orientation: 'portrait', unit: 'pt', format: 'a4' });
     var PW = doc.internal.pageSize.getWidth();
@@ -702,6 +733,11 @@
 
     var filename = (isNfe ? 'nfe-' : 'nfse-') + (d.numero || 'nota') + '.pdf';
     doc.save(filename);
+    } catch (err) {
+      showError('Ocorreu um erro ao gerar o PDF. Tente novamente.');
+    } finally {
+      btnPdf.disabled = false; btnPdf.innerHTML = originalLabel;
+    }
   });
 })();
 </script>
