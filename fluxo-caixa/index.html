@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fluxo de Caixa em Tempo Real — Gestão Fácil</title>
+<meta name="description" content="Registre entradas e saídas na hora e acompanhe o saldo do caixa atualizar instantaneamente, direto no navegador.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0c2230; --ink-soft: #4d6b7a; --paper: #f2f9fb; --paper-raised: #ffffff;
+    --border: #d9ecf1; --navy: #0c2230; --navy-deep: #061219; --accent: #0891a8;
+    --accent-soft: #d9f2f6; --gold: #f2b705; --gold-ink: #4a3600;
+    --good: #0f9d6b; --good-soft: #dff5ea; --bad: #d64545; --bad-soft: #fbe4e2;
+    --shadow-card: 0 18px 40px -18px rgba(12,34,48,0.28);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --ink: #e6f3f6; --ink-soft: #94b3bd; --paper: #06131a; --paper-raised: #0f232c;
+      --border: #1c3945; --accent: #34c6dd; --accent-soft: #123640;
+      --good: #34d399; --good-soft: #10302340; --bad: #f27a72; --bad-soft: #3a201e;
+      --shadow-card: 0 18px 40px -18px rgba(0,0,0,0.55);
+    }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--paper); color: var(--ink); font-family: 'Inter', system-ui, sans-serif; }
+  h1, h2, h3, .display { font-family: 'Space Grotesk', system-ui, sans-serif; }
+  a { color: inherit; }
+
+  nav.top { display: flex; align-items: center; justify-content: space-between; max-width: 980px; margin: 0 auto; padding: 20px 24px; }
+  nav.top .brand { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 17px; letter-spacing: -0.01em; text-decoration: none; }
+  nav.top .brand .mark { width: 30px; height: 30px; border-radius: 9px; background: linear-gradient(135deg, var(--accent), #0c5f71); flex: none; }
+  nav.top .back { font-size: 13.5px; font-weight: 700; color: var(--accent-soft); background: var(--navy); padding: 9px 16px; border-radius: 8px; text-decoration: none; }
+
+  header.hero {
+    background: linear-gradient(135deg, var(--navy-deep), var(--navy) 60%);
+    border-radius: 0 0 26px 26px; max-width: 980px; margin: 0 auto; padding: 40px 28px 32px; text-align: center;
+  }
+  header.hero .eyebrow {
+    display: inline-block; color: #cdeef4; font-size: 12.5px; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase;
+    background: rgba(255,255,255,0.10); border: 1px solid rgba(255,255,255,0.18); padding: 6px 14px; border-radius: 999px; margin-bottom: 16px;
+  }
+  header.hero h1 { color: #fff; font-size: 30px; margin: 0 0 10px; letter-spacing: -0.02em; }
+  header.hero p { color: #cfe9ee; font-size: 14.5px; line-height: 1.55; max-width: 560px; margin: 0 auto; }
+
+  main { max-width: 900px; margin: 0 auto; padding: 26px 20px 70px; }
+
+  .balance-card {
+    border-radius: 20px; padding: 24px 26px; margin-bottom: 20px;
+    background: linear-gradient(135deg, #063842 0%, #0891a8 55%, #0f9d6b 100%);
+    color: #fff; box-shadow: 0 18px 40px -16px rgba(8,60,70,0.5);
+    display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 18px;
+  }
+  .balance-card .lbl { font-size: 12px; text-transform: uppercase; letter-spacing: 0.06em; opacity: 0.85; margin-bottom: 6px; }
+  .balance-card .val { font-family: 'Space Grotesk', sans-serif; font-size: 38px; font-weight: 700; letter-spacing: -0.01em; font-variant-numeric: tabular-nums; }
+  .mini-row { display: flex; gap: 22px; flex-wrap: wrap; }
+  .mini-row .mini { text-align: right; }
+  .mini-row .mini .l { font-size: 11px; opacity: 0.8; text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 3px; }
+  .mini-row .mini .v { font-family: 'Space Grotesk', sans-serif; font-size: 17px; font-weight: 700; font-variant-numeric: tabular-nums; }
+
+  .card {
+    background: var(--paper-raised); border: 1px solid var(--border); border-radius: 18px; padding: 22px;
+    box-shadow: var(--shadow-card); margin-bottom: 18px;
+  }
+  .card h2 { font-size: 17px; margin: 0 0 14px; }
+
+  .quick-form { display: grid; grid-template-columns: 120px 1fr 140px 140px auto; gap: 10px; align-items: end; }
+  @media (max-width: 720px) { .quick-form { grid-template-columns: 1fr 1fr; } }
+  .field { display: flex; flex-direction: column; gap: 5px; }
+  .field label { font-size: 11.5px; font-weight: 700; color: var(--ink-soft); text-transform: uppercase; letter-spacing: 0.03em; }
+  .field input, .field select {
+    font: 600 13.5px 'Inter', sans-serif; padding: 10px 11px; border-radius: 10px;
+    border: 1.5px solid var(--border); background: var(--paper); color: var(--ink);
+  }
+  .field input:focus, .field select:focus { outline: none; border-color: var(--accent); }
+
+  .type-toggle { display: flex; border: 1.5px solid var(--border); border-radius: 10px; overflow: hidden; }
+  .type-toggle button {
+    flex: 1; padding: 10px 6px; border: none; background: var(--paper); color: var(--ink-soft);
+    font: 700 12.5px 'Inter', sans-serif; cursor: pointer;
+  }
+  .type-toggle button.active.entrada { background: var(--good-soft); color: var(--good); }
+  .type-toggle button.active.saida { background: var(--bad-soft); color: var(--bad); }
+
+  .btn {
+    font: 700 13.5px 'Inter', sans-serif; padding: 11px 18px; border-radius: 10px; border: none; cursor: pointer;
+  }
+  .btn-primary { background: var(--accent); color: #fff; }
+  .btn-outline { background: var(--paper); color: var(--ink-soft); border: 1.5px solid var(--border); }
+
+  .filters { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 14px; }
+  .filters button {
+    padding: 8px 14px; border-radius: 999px; border: 1.5px solid var(--border); background: var(--paper);
+    color: var(--ink-soft); font: 700 12.5px 'Inter', sans-serif; cursor: pointer;
+  }
+  .filters button.active { background: var(--accent-soft); color: var(--accent); border-color: var(--accent); }
+
+  .toolbar { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 16px; justify-content: flex-end; }
+
+  .tx-row {
+    display: grid; grid-template-columns: 95px 90px 1fr 130px 32px; gap: 10px; align-items: center;
+    padding: 10px 8px; border-radius: 10px; border-bottom: 1px solid var(--border);
+  }
+  .tx-row:last-child { border-bottom: none; }
+  .tx-row .data { font-size: 12.5px; color: var(--ink-soft); font-variant-numeric: tabular-nums; }
+  .tx-row .tipo-pill { font-size: 10.5px; font-weight: 800; text-transform: uppercase; padding: 3px 9px; border-radius: 999px; text-align: center; }
+  .tx-row .tipo-pill.entrada { background: var(--good-soft); color: var(--good); }
+  .tx-row .tipo-pill.saida { background: var(--bad-soft); color: var(--bad); }
+  .tx-row .desc { font-size: 13.5px; }
+  .tx-row .desc .cat { display: block; font-size: 11px; color: var(--ink-soft); margin-top: 1px; }
+  .tx-row .val { font-weight: 700; font-variant-numeric: tabular-nums; text-align: right; font-size: 13.5px; }
+  .tx-row .val.entrada { color: var(--good); }
+  .tx-row .val.saida { color: var(--bad); }
+  .tx-row .del { border: none; background: transparent; color: var(--ink-soft); cursor: pointer; font-size: 15px; border-radius: 50%; width: 28px; height: 28px; }
+  .tx-row .del:hover { color: var(--bad); background: var(--bad-soft); }
+  @media (max-width: 640px) {
+    .tx-row { grid-template-columns: 1fr 1fr; grid-template-areas: "data tipo" "desc desc" "val del"; row-gap: 4px; }
+    .tx-row .data { grid-area: data; } .tx-row .tipo-pill { grid-area: tipo; justify-self: end; }
+    .tx-row .desc { grid-area: desc; } .tx-row .val { grid-area: val; } .tx-row .del { grid-area: del; justify-self: end; }
+  }
+  .tx-empty { text-align: center; padding: 30px 10px; color: var(--ink-soft); font-size: 13.5px; }
+
+  .meta-footer { text-align: center; margin: 30px auto 0; font-size: 12px; color: var(--ink-soft); line-height: 1.6; max-width: 520px; }
+  .meta-footer a { color: var(--accent); font-weight: 700; text-decoration: none; }
+
+  @media print {
+    nav.top, header.hero, .quick-form, .filters, .toolbar, .tx-row .del, .meta-footer { display: none !important; }
+    .card { box-shadow: none; border: none; }
+    body { background: #fff; }
+  }
+  @media (max-width: 560px) {
+    header.hero { padding: 32px 20px 26px; border-radius: 0 0 18px 18px; }
+    header.hero h1 { font-size: 24px; }
+    .balance-card .val { font-size: 30px; }
+  }
+</style>
+</head>
+<body>
+
+  <nav class="top">
+    <a class="brand" href="../">
+      <div class="mark" aria-hidden="true"></div>
+      Gestão Fácil
+    </a>
+    <a class="back" href="../">← Voltar às ferramentas</a>
+  </nav>
+
+  <header class="hero">
+    <span class="eyebrow">Financeiro · caixa do dia a dia</span>
+    <h1>Fluxo de Caixa em Tempo Real</h1>
+    <p>Lance entradas e saídas na hora e veja o saldo do caixa mudar na mesma tela — sem esperar o fechamento do mês para saber quanto sobrou.</p>
+  </header>
+
+  <main>
+    <div class="balance-card">
+      <div>
+        <div class="lbl">Saldo atual</div>
+        <div class="val mono" id="saldoAtual">R$ 0,00</div>
+      </div>
+      <div class="mini-row">
+        <div class="mini">
+          <div class="l">Entradas (período)</div>
+          <div class="v" id="totalEntradas">R$ 0,00</div>
+        </div>
+        <div class="mini">
+          <div class="l">Saídas (período)</div>
+          <div class="v" id="totalSaidas">R$ 0,00</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Novo lançamento</h2>
+      <form id="quickForm" class="quick-form">
+        <div class="field">
+          <label>Tipo</label>
+          <div class="type-toggle">
+            <button type="button" class="active entrada" data-tipo="entrada">Entrada</button>
+            <button type="button" class="saida" data-tipo="saida">Saída</button>
+          </div>
+        </div>
+        <div class="field">
+          <label for="fDesc">Descrição</label>
+          <input type="text" id="fDesc" placeholder="Ex.: Venda balcão, pagamento fornecedor..." required>
+        </div>
+        <div class="field">
+          <label for="fCat">Categoria</label>
+          <input type="text" id="fCat" placeholder="Opcional">
+        </div>
+        <div class="field">
+          <label for="fValor">Valor (R$)</label>
+          <input type="number" id="fValor" step="0.01" min="0" placeholder="0,00" required>
+        </div>
+        <button class="btn btn-primary" type="submit">Lançar</button>
+      </form>
+    </div>
+
+    <div class="card">
+      <h2>Movimentações</h2>
+      <div class="filters" id="filters">
+        <button data-period="hoje" class="active">Hoje</button>
+        <button data-period="7d">Últimos 7 dias</button>
+        <button data-period="mes">Este mês</button>
+        <button data-period="tudo">Tudo</button>
+      </div>
+      <div class="toolbar">
+        <button class="btn btn-outline" id="btnPrint" type="button">Imprimir</button>
+        <button class="btn btn-outline" id="btnPdf" type="button">Baixar PDF</button>
+        <button class="btn btn-outline" id="btnClear" type="button">Limpar tudo</button>
+      </div>
+      <div id="txList"></div>
+    </div>
+
+    <p class="meta-footer">
+      Desenvolvido por Andreia Brandborg · <a href="mailto:andreiabrandborg@gmail.com">andreiabrandborg@gmail.com</a><br>
+      Os dados ficam salvos apenas neste navegador — nada é enviado para nenhum servidor.<br>
+      <span style="opacity:0.75;">Projeto de portfólio, desenvolvido para fins de demonstração.</span>
+    </p>
+  </main>
+
+<script>
+(function(){
+  "use strict";
+
+  var STORAGE_KEY = 'gf-fluxo-caixa-v1';
+  var currentTipo = 'entrada';
+  var currentPeriod = 'hoje';
+  var txs = [];
+
+  function loadScriptOnce(url){
+    return new Promise(function(resolve){
+      var s = document.createElement('script');
+      s.src = url; s.onload = function(){ resolve(true); }; s.onerror = function(){ resolve(false); };
+      document.head.appendChild(s);
+    });
+  }
+  async function ensureJsPDF(){
+    var ctor = window.jspdf && window.jspdf.jsPDF;
+    if (ctor) return ctor;
+    await loadScriptOnce('https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.2/jspdf.umd.min.js');
+    ctor = window.jspdf && window.jspdf.jsPDF;
+    if (ctor) return ctor;
+    await loadScriptOnce('https://cdn.jsdelivr.net/npm/jspdf@2.5.2/dist/jspdf.umd.min.js');
+    ctor = window.jspdf && window.jspdf.jsPDF;
+    return ctor || null;
+  }
+
+  function load(){
+    try {
+      var raw = localStorage.getItem(STORAGE_KEY);
+      txs = raw ? JSON.parse(raw) : [];
+    } catch(e){ txs = []; }
+  }
+  function save(){
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(txs)); } catch(e){}
+  }
+
+  function fmtBRL(n){
+    var v = parseFloat(n);
+    if (isNaN(v)) v = 0;
+    return v.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+  }
+  function todayISO(){
+    var d = new Date();
+    return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+  }
+  function fmtDateBR(iso){
+    var p = iso.split('-');
+    return p[2] + '/' + p[1] + '/' + p[0].slice(2);
+  }
+
+  function withinPeriod(iso, period){
+    var d = new Date(iso + 'T00:00:00');
+    var now = new Date();
+    var today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    if (period === 'tudo') return true;
+    if (period === 'hoje') return d.getTime() === today.getTime();
+    if (period === '7d'){
+      var d7 = new Date(today); d7.setDate(d7.getDate() - 6);
+      return d >= d7 && d <= today;
+    }
+    if (period === 'mes'){
+      return d.getFullYear() === now.getFullYear() && d.getMonth() === now.getMonth();
+    }
+    return true;
+  }
+
+  function render(){
+    var filtered = txs.filter(function(t){ return withinPeriod(t.data, currentPeriod); })
+      .sort(function(a,b){ return (b.data + b.id) < (a.data + a.id) ? -1 : 1; });
+
+    var entradasPeriodo = filtered.filter(function(t){ return t.tipo === 'entrada'; }).reduce(function(s,t){ return s + t.valor; }, 0);
+    var saidasPeriodo = filtered.filter(function(t){ return t.tipo === 'saida'; }).reduce(function(s,t){ return s + t.valor; }, 0);
+    var saldoGeral = txs.reduce(function(s,t){ return s + (t.tipo === 'entrada' ? t.valor : -t.valor); }, 0);
+
+    document.getElementById('saldoAtual').textContent = fmtBRL(saldoGeral);
+    document.getElementById('saldoAtual').style.color = saldoGeral < 0 ? '#ffd7d2' : '#fff';
+    document.getElementById('totalEntradas').textContent = fmtBRL(entradasPeriodo);
+    document.getElementById('totalSaidas').textContent = fmtBRL(saidasPeriodo);
+
+    var list = document.getElementById('txList');
+    if (!filtered.length){
+      list.innerHTML = '<div class="tx-empty">Nenhuma movimentação neste período.</div>';
+      return;
+    }
+    list.innerHTML = filtered.map(function(t){
+      return '<div class="tx-row">' +
+        '<div class="data">' + fmtDateBR(t.data) + '</div>' +
+        '<div class="tipo-pill ' + t.tipo + '">' + (t.tipo === 'entrada' ? 'Entrada' : 'Saída') + '</div>' +
+        '<div class="desc">' + escapeHtml(t.descricao) + (t.categoria ? '<span class="cat">' + escapeHtml(t.categoria) + '</span>' : '') + '</div>' +
+        '<div class="val ' + t.tipo + '">' + (t.tipo === 'entrada' ? '+ ' : '- ') + fmtBRL(t.valor) + '</div>' +
+        '<button class="del" data-id="' + t.id + '" title="Remover" type="button">✕</button>' +
+      '</div>';
+    }).join('');
+
+    list.querySelectorAll('.del').forEach(function(btn){
+      btn.addEventListener('click', function(){
+        var id = btn.getAttribute('data-id');
+        txs = txs.filter(function(t){ return String(t.id) !== id; });
+        save(); render();
+      });
+    });
+  }
+
+  function escapeHtml(s){
+    return String(s || '').replace(/[&<>"']/g, function(c){
+      return { '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[c];
+    });
+  }
+
+  // ---------- type toggle ----------
+  document.querySelectorAll('.type-toggle button').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      document.querySelectorAll('.type-toggle button').forEach(function(b){ b.classList.remove('active'); });
+      btn.classList.add('active');
+      currentTipo = btn.getAttribute('data-tipo');
+    });
+  });
+
+  // ---------- filters ----------
+  document.querySelectorAll('#filters button').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      document.querySelectorAll('#filters button').forEach(function(b){ b.classList.remove('active'); });
+      btn.classList.add('active');
+      currentPeriod = btn.getAttribute('data-period');
+      render();
+    });
+  });
+
+  // ---------- form ----------
+  document.getElementById('quickForm').addEventListener('submit', function(e){
+    e.preventDefault();
+    var desc = document.getElementById('fDesc').value.trim();
+    var cat = document.getElementById('fCat').value.trim();
+    var valor = parseFloat(document.getElementById('fValor').value);
+    if (!desc || isNaN(valor) || valor <= 0) return;
+
+    txs.push({
+      id: Date.now() + '-' + Math.random().toString(36).slice(2,7),
+      tipo: currentTipo,
+      descricao: desc,
+      categoria: cat,
+      valor: valor,
+      data: todayISO()
+    });
+    save();
+    document.getElementById('fDesc').value = '';
+    document.getElementById('fCat').value = '';
+    document.getElementById('fValor').value = '';
+    document.getElementById('fDesc').focus();
+    render();
+  });
+
+  document.getElementById('btnClear').addEventListener('click', function(){
+    if (!txs.length) return;
+    if (!confirm('Apagar todas as movimentações? Essa ação não pode ser desfeita.')) return;
+    txs = [];
+    save(); render();
+  });
+
+  document.getElementById('btnPrint').addEventListener('click', function(){ window.print(); });
+
+  document.getElementById('btnPdf').addEventListener('click', async function(){
+    var btn = document.getElementById('btnPdf');
+    var original = btn.innerHTML;
+    btn.disabled = true; btn.innerHTML = 'Gerando…';
+    try {
+      var jsPDFCtor = await ensureJsPDF();
+      if (!jsPDFCtor){ alert('Não foi possível carregar o gerador de PDF. Verifique sua conexão.'); return; }
+
+      var filtered = txs.filter(function(t){ return withinPeriod(t.data, currentPeriod); })
+        .sort(function(a,b){ return (b.data + b.id) < (a.data + a.id) ? -1 : 1; });
+      var entradasPeriodo = filtered.filter(function(t){ return t.tipo === 'entrada'; }).reduce(function(s,t){ return s + t.valor; }, 0);
+      var saidasPeriodo = filtered.filter(function(t){ return t.tipo === 'saida'; }).reduce(function(s,t){ return s + t.valor; }, 0);
+
+      var INK = [12,34,48], SOFT = [77,107,122], GOOD = [15,157,107], BAD = [214,69,69], LINE = [217,236,241];
+      var doc = new jsPDFCtor({ orientation: 'landscape', unit: 'pt', format: 'a4' });
+      var PW = doc.internal.pageSize.getWidth();
+
+      doc.setFillColor(255,255,255); doc.rect(0,0,PW,doc.internal.pageSize.getHeight(),'F');
+      doc.setTextColor(INK[0],INK[1],INK[2]); doc.setFont('helvetica','bold'); doc.setFontSize(20);
+      doc.text('FLUXO DE CAIXA EM TEMPO REAL', 40, 40);
+      doc.setFont('helvetica','normal'); doc.setFontSize(10.5); doc.setTextColor(SOFT[0],SOFT[1],SOFT[2]);
+      doc.text('Gerado em ' + new Date().toLocaleDateString('pt-BR') + ' · Período: ' + currentPeriod, 40, 58);
+
+      var y = 88;
+      var colX = [40, 110, 190, 500];
+      doc.setFont('helvetica','bold'); doc.setFontSize(9); doc.setTextColor(SOFT[0],SOFT[1],SOFT[2]);
+      ['Data','Tipo','Descrição','Valor'].forEach(function(h,i){ doc.text(h, colX[i], y); });
+      y += 6;
+      doc.setDrawColor(LINE[0],LINE[1],LINE[2]); doc.line(40, y, PW - 40, y); y += 14;
+
+      filtered.forEach(function(t){
+        if (y > 520){ doc.addPage(); y = 46; }
+        doc.setFont('helvetica','normal'); doc.setFontSize(9.5); doc.setTextColor(INK[0],INK[1],INK[2]);
+        doc.text(fmtDateBR(t.data), colX[0], y);
+        doc.text(t.tipo === 'entrada' ? 'Entrada' : 'Saída', colX[1], y);
+        doc.text((t.descricao + (t.categoria ? ' — ' + t.categoria : '')).slice(0,55), colX[2], y);
+        doc.setTextColor.apply(doc, t.tipo === 'entrada' ? GOOD : BAD);
+        doc.text((t.tipo === 'entrada' ? '+ ' : '- ') + fmtBRL(t.valor), colX[3], y);
+        y += 15;
+      });
+
+      y += 14;
+      doc.setDrawColor(LINE[0],LINE[1],LINE[2]); doc.line(40, y, PW - 40, y); y += 20;
+      doc.setFont('helvetica','bold'); doc.setFontSize(11); doc.setTextColor(GOOD[0],GOOD[1],GOOD[2]);
+      doc.text('Entradas: ' + fmtBRL(entradasPeriodo), 40, y);
+      doc.setTextColor(BAD[0],BAD[1],BAD[2]);
+      doc.text('Saídas: ' + fmtBRL(saidasPeriodo), 220, y);
+      doc.setTextColor(INK[0],INK[1],INK[2]);
+      doc.text('Saldo do período: ' + fmtBRL(entradasPeriodo - saidasPeriodo), 400, y);
+
+      doc.save('fluxo-caixa-' + todayISO() + '.pdf');
+    } catch(err){
+      alert('Ocorreu um erro ao gerar o PDF. Tente novamente.');
+    } finally {
+      btn.disabled = false; btn.innerHTML = original;
+    }
+  });
+
+  load();
+  render();
+})();
+</script>
+</body>
+</html>
