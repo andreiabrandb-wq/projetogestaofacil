@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Buscador de NCM — Gestão Fácil</title>
+<meta name="description" content="Encontre o código NCM de um produto pela descrição, ou consulte a descrição a partir do código — tabela oficial da Receita Federal/Siscomex.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0f1c3d; --ink-soft: #56628a; --paper: #f5f7fd; --paper-raised: #ffffff;
+    --border: #e2e6f5; --navy: #0f1c3d; --navy-deep: #081026; --accent: #2f5fe0;
+    --accent-soft: #e8edfc; --gold: #f2b705; --gold-ink: #4a3600;
+    --shadow-card: 0 18px 40px -18px rgba(15,28,61,0.28);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --ink: #e7eaf0; --ink-soft: #98a3c2; --paper: #0b0e1a; --paper-raised: #131a2c;
+      --border: #232c47; --accent: #7c9bff; --accent-soft: #1c2740;
+      --shadow-card: 0 18px 40px -18px rgba(0,0,0,0.55);
+    }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--paper); color: var(--ink); font-family: 'Inter', system-ui, sans-serif; }
+  h1, h2, .display { font-family: 'Space Grotesk', system-ui, sans-serif; }
+  a { color: inherit; }
+
+  nav.top {
+    display: flex; align-items: center; justify-content: space-between;
+    max-width: 980px; margin: 0 auto; padding: 20px 24px;
+  }
+  nav.top .brand { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 17px; letter-spacing: -0.01em; text-decoration: none; }
+  nav.top .brand .mark {
+    width: 30px; height: 30px; border-radius: 9px; background: linear-gradient(135deg, var(--accent), #6ea0ff); flex: none;
+  }
+  nav.top .back { font-size: 13.5px; font-weight: 700; color: var(--accent-soft); background: var(--navy); padding: 9px 16px; border-radius: 8px; text-decoration: none; }
+
+  header.hero {
+    background: linear-gradient(135deg, var(--navy-deep), var(--navy) 60%);
+    border-radius: 0 0 26px 26px; max-width: 980px; margin: 0 auto; padding: 44px 28px 34px; text-align: center;
+  }
+  header.hero .eyebrow {
+    display: inline-block; color: #cfe0ff; font-size: 12.5px; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase;
+    background: rgba(255,255,255,0.10); border: 1px solid rgba(255,255,255,0.18); padding: 6px 14px; border-radius: 999px; margin-bottom: 16px;
+  }
+  header.hero h1 { color: #fff; font-size: 32px; margin: 0 0 10px; letter-spacing: -0.02em; }
+  header.hero p { color: #d7e0fa; font-size: 15px; line-height: 1.55; max-width: 560px; margin: 0 auto; }
+
+  main { max-width: 860px; margin: 0 auto; padding: 30px 20px 70px; }
+
+  .search-card {
+    background: var(--paper-raised); border: 1px solid var(--border); border-radius: 18px; padding: 20px;
+    box-shadow: var(--shadow-card); margin-bottom: 8px; position: sticky; top: 14px; z-index: 5;
+  }
+  .search-box { position: relative; }
+  .search-box input {
+    width: 100%; font: 600 16px 'Inter', sans-serif; padding: 15px 16px 15px 46px; border-radius: 12px;
+    border: 1.5px solid var(--border); background: var(--paper); color: var(--ink);
+  }
+  .search-box input:focus { outline: none; border-color: var(--accent); }
+  .search-box svg.icon-search {
+    position: absolute; left: 15px; top: 50%; transform: translateY(-50%); width: 20px; height: 20px; color: var(--ink-soft); pointer-events: none;
+  }
+  .hint-row { display: flex; justify-content: space-between; align-items: center; margin-top: 10px; flex-wrap: wrap; gap: 6px; }
+  .hint-row .hint { font-size: 12.5px; color: var(--ink-soft); }
+  .hint-row .count { font-size: 12.5px; font-weight: 700; color: var(--accent); }
+
+  .results { margin-top: 18px; display: flex; flex-direction: column; gap: 10px; }
+  .result-card {
+    background: var(--paper-raised); border: 1px solid var(--border); border-radius: 14px; padding: 16px 18px;
+    display: flex; gap: 14px; align-items: flex-start; box-shadow: 0 1px 2px rgba(16,24,40,0.05);
+  }
+  .result-card .code-badge {
+    flex: none; font: 800 14px 'Space Grotesk', sans-serif; color: var(--accent); background: var(--accent-soft);
+    padding: 8px 10px; border-radius: 9px; letter-spacing: -0.01em; white-space: nowrap;
+  }
+  .result-card .desc { flex: 1; font-size: 14.5px; line-height: 1.5; color: var(--ink); }
+  .result-card .desc mark { background: rgba(242,183,5,0.45); color: inherit; border-radius: 3px; padding: 0 1px; }
+  .result-card .copy-btn {
+    flex: none; background: none; border: 1.5px solid var(--border); color: var(--ink-soft); border-radius: 8px;
+    padding: 7px 9px; cursor: pointer; font-size: 12px; font-weight: 700;
+  }
+  .result-card .copy-btn:active { transform: scale(0.96); }
+  .result-card .copy-btn.copied { border-color: var(--accent); color: var(--accent); }
+
+  .empty, .loading { text-align: center; padding: 50px 20px; color: var(--ink-soft); }
+  .empty svg, .loading svg { width: 40px; height: 40px; margin-bottom: 12px; opacity: 0.6; }
+  .loading svg { animation: spin 1s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .meta-footer { text-align: center; margin: 34px auto 0; font-size: 12px; color: var(--ink-soft); line-height: 1.6; max-width: 480px; }
+  .meta-footer a { color: var(--accent); font-weight: 700; text-decoration: none; }
+
+  @media (max-width: 560px) {
+    header.hero { padding: 34px 20px 28px; border-radius: 0 0 18px 18px; }
+    header.hero h1 { font-size: 25px; }
+    .search-card { top: 8px; padding: 16px; }
+    .result-card { flex-wrap: wrap; }
+  }
+</style>
+</head>
+<body>
+
+  <nav class="top">
+    <a class="brand" href="../">
+      <div class="mark" aria-hidden="true"></div>
+      Gestão Fácil
+    </a>
+    <a class="back" href="../">← Voltar às ferramentas</a>
+  </nav>
+
+  <header class="hero">
+    <span class="eyebrow">Fiscal &amp; financeiro · tabela oficial Receita Federal/Siscomex</span>
+    <h1>Buscador de NCM</h1>
+    <p>Digite o nome do produto para achar o código, ou o código para ver a descrição completa. Tudo roda no seu navegador, sem enviar nada para fora.</p>
+  </header>
+
+  <main>
+    <div class="search-card">
+      <div class="search-box">
+        <svg class="icon-search" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.35-4.35"/></svg>
+        <input type="text" id="searchInput" placeholder="Ex: parafuso, notebook, 8471.30.19..." autocomplete="off" spellcheck="false">
+      </div>
+      <div class="hint-row">
+        <span class="hint" id="updatedHint">Carregando tabela...</span>
+        <span class="count" id="resultCount"></span>
+      </div>
+    </div>
+
+    <div id="resultsArea">
+      <div class="loading" id="loadingState">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg>
+        <p>Carregando a tabela de NCM...</p>
+      </div>
+    </div>
+
+    <p class="meta-footer">
+      Desenvolvido por Andreia Brandborg · <a href="mailto:andreiabrandborg@gmail.com">andreiabrandborg@gmail.com</a><br>
+      Fonte: tabela oficial de NCM da Receita Federal/Siscomex. Consulte sempre o <a href="https://portalunico.siscomex.gov.br/classif/#/sumario?perfil=publico" target="_blank" rel="noopener">portal oficial</a> antes de decisões fiscais importantes.
+    </p>
+  </main>
+
+<script>
+(function(){
+  "use strict";
+
+  var ncmData = [];
+  var resultsArea = document.getElementById('resultsArea');
+  var input = document.getElementById('searchInput');
+  var resultCount = document.getElementById('resultCount');
+  var updatedHint = document.getElementById('updatedHint');
+  var MAX_RESULTS = 150;
+  var debounceTimer = null;
+
+  function escapeHtml(s){
+    return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  }
+
+  function normalize(s){
+    return s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
+  }
+
+  function highlight(text, termNorm){
+    if (!termNorm) return escapeHtml(text);
+    var textNorm = normalize(text);
+    var idx = textNorm.indexOf(termNorm);
+    if (idx === -1) return escapeHtml(text);
+    var out = '';
+    var lastEnd = 0;
+    var i = 0;
+    while (i !== -1 && i < text.length){
+      i = textNorm.indexOf(termNorm, lastEnd);
+      if (i === -1) break;
+      out += escapeHtml(text.slice(lastEnd, i));
+      out += '<mark>' + escapeHtml(text.slice(i, i + termNorm.length)) + '</mark>';
+      lastEnd = i + termNorm.length;
+    }
+    out += escapeHtml(text.slice(lastEnd));
+    return out;
+  }
+
+  function renderEmpty(msg){
+    resultsArea.innerHTML =
+      '<div class="empty">' +
+        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.35-4.35"/></svg>' +
+        '<p>' + msg + '</p>' +
+      '</div>';
+  }
+
+  function render(list, termNorm, byCode){
+    if (!list.length){
+      renderEmpty('Nenhum NCM encontrado para essa busca.');
+      resultCount.textContent = '';
+      return;
+    }
+    resultCount.textContent = list.length + (list.length >= MAX_RESULTS ? '+' : '') + ' resultado' + (list.length === 1 ? '' : 's');
+    var shown = list.slice(0, MAX_RESULTS);
+    var html = shown.map(function(item){
+      var codeHtml = byCode ? highlight(item.c, termNorm) : escapeHtml(item.c);
+      var descHtml = byCode ? escapeHtml(item.d) : highlight(item.d, termNorm);
+      return (
+        '<div class="result-card">' +
+          '<span class="code-badge">' + codeHtml + '</span>' +
+          '<span class="desc">' + descHtml + '</span>' +
+          '<button class="copy-btn" data-code="' + item.c + '" type="button">Copiar</button>' +
+        '</div>'
+      );
+    }).join('');
+    resultsArea.innerHTML = '<div class="results">' + html + '</div>';
+  }
+
+  function isCodeLike(termRaw){
+    return /^\d[\d.\s-]*$/.test(termRaw.trim()) && /\d/.test(termRaw);
+  }
+
+  function doSearch(){
+    var raw = input.value.trim();
+    if (!raw){
+      renderEmpty('Comece digitando o nome do produto ou o código NCM.');
+      resultCount.textContent = '';
+      return;
+    }
+    if (raw.length < 2){
+      renderEmpty('Digite pelo menos 2 caracteres.');
+      resultCount.textContent = '';
+      return;
+    }
+
+    var byCode = isCodeLike(raw);
+    if (byCode){
+      var digits = raw.replace(/\D/g, '');
+      var matches = ncmData.filter(function(item){
+        return item.c.replace(/\D/g, '').indexOf(digits) === 0 || item.c.replace(/\D/g, '').indexOf(digits) !== -1;
+      });
+      matches.sort(function(a, b){
+        var ad = a.c.replace(/\D/g, ''), bd = b.c.replace(/\D/g, '');
+        var aStarts = ad.indexOf(digits) === 0 ? 0 : 1;
+        var bStarts = bd.indexOf(digits) === 0 ? 0 : 1;
+        if (aStarts !== bStarts) return aStarts - bStarts;
+        return ad.localeCompare(bd);
+      });
+      render(matches, digits, true);
+    } else {
+      var termNorm = normalize(raw);
+      var words = termNorm.split(/\s+/).filter(Boolean);
+      var matches = ncmData.filter(function(item){
+        var dn = item._dn || (item._dn = normalize(item.d));
+        return words.every(function(w){ return dn.indexOf(w) !== -1; });
+      });
+      matches.sort(function(a, b){
+        var ai = a._dn.indexOf(words[0]);
+        var bi = b._dn.indexOf(words[0]);
+        if (ai !== bi) return ai - bi;
+        return a.d.length - b.d.length;
+      });
+      render(matches, termNorm, false);
+    }
+  }
+
+  resultsArea.addEventListener('click', function(e){
+    var btn = e.target.closest('.copy-btn');
+    if (!btn) return;
+    var code = btn.getAttribute('data-code');
+    var restore = function(){ btn.textContent = 'Copiar'; btn.classList.remove('copied'); };
+    var mark = function(){ btn.textContent = 'Copiado!'; btn.classList.add('copied'); setTimeout(restore, 1400); };
+    if (navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(code).then(mark).catch(function(){
+        var ta = document.createElement('textarea');
+        ta.value = code; document.body.appendChild(ta); ta.select();
+        try { document.execCommand('copy'); } catch(err) {}
+        document.body.removeChild(ta); mark();
+      });
+    }
+  });
+
+  input.addEventListener('input', function(){
+    clearTimeout(debounceTimer);
+    debounceTimer = setTimeout(doSearch, 120);
+  });
+
+  fetch('./ncm_data.json')
+    .then(function(r){ return r.json(); })
+    .then(function(json){
+      ncmData = json.itens;
+      updatedHint.textContent = json.atualizado + ' · ' + json.ato;
+      renderEmpty('Comece digitando o nome do produto ou o código NCM.');
+    })
+    .catch(function(){
+      updatedHint.textContent = 'Não foi possível carregar a tabela.';
+      renderEmpty('Não foi possível carregar a tabela de NCM. Verifique se o arquivo ncm_data.json está publicado junto com esta página.');
+    });
+})();
+</script>
+</body>
+</html>
