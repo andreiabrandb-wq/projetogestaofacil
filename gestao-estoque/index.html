@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gestão de Estoque — Gestão Fácil</title>
+<meta name="description" content="Cadastre produtos, registre entradas e saídas e receba alerta de estoque baixo — direto no navegador.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #241533; --ink-soft: #6b5a80; --paper: #f7f3fc; --paper-raised: #ffffff;
+    --border: #e6dcf5; --navy: #241533; --navy-deep: #150c1f; --accent: #7c3aed;
+    --accent-soft: #ede4fd; --gold: #f2b705; --gold-ink: #4a3600;
+    --good: #0f9d6b; --good-soft: #dff5ea; --bad: #d64545; --bad-soft: #fbe4e2;
+    --warn: #c47a10; --warn-soft: #fbecd4;
+    --shadow-card: 0 18px 40px -18px rgba(36,21,51,0.26);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --ink: #efe7fa; --ink-soft: #b0a0c8; --paper: #140c1c; --paper-raised: #1e1329;
+      --border: #362447; --accent: #a884f5; --accent-soft: #2a1c3c;
+      --good: #34d399; --good-soft: #123024; --bad: #f27a72; --bad-soft: #3a201e;
+      --warn: #e0ab5c; --warn-soft: #362a17;
+      --shadow-card: 0 18px 40px -18px rgba(0,0,0,0.55);
+    }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--paper); color: var(--ink); font-family: 'Inter', system-ui, sans-serif; }
+  h1, h2, h3, .display { font-family: 'Space Grotesk', system-ui, sans-serif; }
+  a { color: inherit; }
+
+  nav.top { display: flex; align-items: center; justify-content: space-between; max-width: 1000px; margin: 0 auto; padding: 20px 24px; }
+  nav.top .brand { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 17px; letter-spacing: -0.01em; text-decoration: none; }
+  nav.top .brand .mark { width: 30px; height: 30px; border-radius: 9px; background: linear-gradient(135deg, var(--accent), #4c1d95); flex: none; }
+  nav.top .back { font-size: 13.5px; font-weight: 700; color: var(--accent-soft); background: var(--navy); padding: 9px 16px; border-radius: 8px; text-decoration: none; }
+
+  header.hero {
+    background: linear-gradient(135deg, var(--navy-deep), var(--navy) 60%);
+    border-radius: 0 0 26px 26px; max-width: 1000px; margin: 0 auto; padding: 40px 28px 32px; text-align: center;
+  }
+  header.hero .eyebrow {
+    display: inline-block; color: #dccdfa; font-size: 12.5px; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase;
+    background: rgba(255,255,255,0.10); border: 1px solid rgba(255,255,255,0.18); padding: 6px 14px; border-radius: 999px; margin-bottom: 16px;
+  }
+  header.hero h1 { color: #fff; font-size: 30px; margin: 0 0 10px; letter-spacing: -0.02em; }
+  header.hero p { color: #dccdf2; font-size: 14.5px; line-height: 1.55; max-width: 580px; margin: 0 auto; }
+
+  main { max-width: 1020px; margin: 0 auto; padding: 26px 20px 70px; }
+
+  .stats-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 14px; margin-bottom: 20px; }
+  .stat {
+    background: var(--paper-raised); border: 1px solid var(--border); border-radius: 16px; padding: 16px 18px;
+    box-shadow: var(--shadow-card);
+  }
+  .stat .l { font-size: 11.5px; color: var(--ink-soft); text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 5px; }
+  .stat .v { font-family: 'Space Grotesk', sans-serif; font-size: 22px; font-weight: 700; }
+  .stat.alert { background: var(--warn-soft); border-color: var(--warn); }
+  .stat.alert .v { color: var(--warn); }
+
+  .card {
+    background: var(--paper-raised); border: 1px solid var(--border); border-radius: 18px; padding: 22px;
+    box-shadow: var(--shadow-card); margin-bottom: 18px;
+  }
+  .card h2 { font-size: 17px; margin: 0 0 14px; }
+
+  .form-grid { display: grid; grid-template-columns: 1.4fr 1fr 1fr 1fr auto; gap: 10px; align-items: end; }
+  @media (max-width: 780px) { .form-grid { grid-template-columns: 1fr 1fr; } }
+  .field { display: flex; flex-direction: column; gap: 5px; }
+  .field label { font-size: 11.5px; font-weight: 700; color: var(--ink-soft); text-transform: uppercase; letter-spacing: 0.03em; }
+  .field input, .field select {
+    font: 600 13.5px 'Inter', sans-serif; padding: 10px 11px; border-radius: 10px;
+    border: 1.5px solid var(--border); background: var(--paper); color: var(--ink);
+  }
+  .field input:focus, .field select:focus { outline: none; border-color: var(--accent); }
+
+  .btn { font: 700 13.5px 'Inter', sans-serif; padding: 11px 18px; border-radius: 10px; border: none; cursor: pointer; }
+  .btn-primary { background: var(--accent); color: #fff; }
+  .btn-outline { background: var(--paper); color: var(--ink-soft); border: 1.5px solid var(--border); }
+
+  table.produtos { width: 100%; border-collapse: collapse; font-size: 13px; }
+  table.produtos th, table.produtos td { padding: 10px 9px; text-align: left; border-bottom: 1px solid var(--border); }
+  table.produtos th { font-size: 10.5px; text-transform: uppercase; letter-spacing: 0.03em; color: var(--ink-soft); }
+  table.produtos td.num { text-align: right; font-variant-numeric: tabular-nums; }
+  table.produtos tr.low { background: var(--warn-soft); }
+  .qty-badge { font-weight: 700; }
+  .qty-badge.low { color: var(--warn); }
+  .low-tag { font-size: 9.5px; font-weight: 800; text-transform: uppercase; background: var(--warn); color: #fff; padding: 2px 7px; border-radius: 999px; margin-left: 6px; }
+  .del-btn { border: none; background: transparent; color: var(--ink-soft); cursor: pointer; font-size: 15px; border-radius: 50%; width: 26px; height: 26px; }
+  .del-btn:hover { color: var(--bad); background: var(--bad-soft); }
+
+  .mov-toggle { display: flex; border: 1.5px solid var(--border); border-radius: 10px; overflow: hidden; }
+  .mov-toggle button { flex: 1; padding: 10px 6px; border: none; background: var(--paper); color: var(--ink-soft); font: 700 12.5px 'Inter', sans-serif; cursor: pointer; }
+  .mov-toggle button.active.entrada { background: var(--good-soft); color: var(--good); }
+  .mov-toggle button.active.saida { background: var(--bad-soft); color: var(--bad); }
+
+  .mov-row { display: grid; grid-template-columns: 130px 1.4fr 90px 1fr auto; gap: 10px; align-items: end; margin-bottom: 6px; }
+  @media (max-width: 780px) { .mov-row { grid-template-columns: 1fr 1fr; } }
+
+  .mov-list { font-size: 12.5px; color: var(--ink-soft); }
+  .mov-list .mv { display: flex; justify-content: space-between; padding: 7px 0; border-bottom: 1px dashed var(--border); }
+  .mov-list .mv:last-child { border-bottom: none; }
+  .mov-list .mv .tag { font-weight: 800; font-size: 10.5px; text-transform: uppercase; padding: 2px 8px; border-radius: 999px; }
+  .mov-list .mv .tag.entrada { background: var(--good-soft); color: var(--good); }
+  .mov-list .mv .tag.saida { background: var(--bad-soft); color: var(--bad); }
+
+  .empty { text-align: center; padding: 24px 10px; color: var(--ink-soft); font-size: 13.5px; }
+
+  .meta-footer { text-align: center; margin: 30px auto 0; font-size: 12px; color: var(--ink-soft); line-height: 1.6; max-width: 520px; }
+  .meta-footer a { color: var(--accent); font-weight: 700; text-decoration: none; }
+
+  @media print {
+    nav.top, header.hero, .form-grid, .mov-row, .del-btn, .meta-footer, .toolbar { display: none !important; }
+    .card { box-shadow: none; border: none; }
+    body { background: #fff; }
+  }
+  @media (max-width: 560px) {
+    header.hero { padding: 32px 20px 26px; border-radius: 0 0 18px 18px; }
+    header.hero h1 { font-size: 24px; }
+  }
+</style>
+</head>
+<body>
+
+  <nav class="top">
+    <a class="brand" href="../">
+      <div class="mark" aria-hidden="true"></div>
+      Gestão Fácil
+    </a>
+    <a class="back" href="../">← Voltar às ferramentas</a>
+  </nav>
+
+  <header class="hero">
+    <span class="eyebrow">Operacional · controle de produtos</span>
+    <h1>Gestão de Estoque</h1>
+    <p>Cadastre seus produtos, registre entradas e saídas e receba um aviso visual assim que algum item chegar perto de acabar — tudo salvo neste navegador.</p>
+  </header>
+
+  <main>
+    <div class="stats-row">
+      <div class="stat"><div class="l">Produtos cadastrados</div><div class="v" id="statQtdProdutos">0</div></div>
+      <div class="stat"><div class="l">Unidades em estoque</div><div class="v" id="statUnidades">0</div></div>
+      <div class="stat"><div class="l">Valor total em estoque</div><div class="v" id="statValor">R$ 0,00</div></div>
+      <div class="stat alert"><div class="l">Estoque baixo</div><div class="v" id="statBaixo">0</div></div>
+    </div>
+
+    <div class="card">
+      <h2>Cadastrar produto</h2>
+      <form id="prodForm" class="form-grid">
+        <div class="field">
+          <label for="pNome">Nome do produto</label>
+          <input type="text" id="pNome" placeholder="Ex.: Caixa de parafusos 10mm" required>
+        </div>
+        <div class="field">
+          <label for="pQtd">Quantidade inicial</label>
+          <input type="number" id="pQtd" min="0" step="1" placeholder="0" required>
+        </div>
+        <div class="field">
+          <label for="pValor">Valor unitário (R$)</label>
+          <input type="number" id="pValor" min="0" step="0.01" placeholder="0,00" required>
+        </div>
+        <div class="field">
+          <label for="pMin">Estoque mínimo</label>
+          <input type="number" id="pMin" min="0" step="1" placeholder="0" required>
+        </div>
+        <button class="btn btn-primary" type="submit">Cadastrar</button>
+      </form>
+    </div>
+
+    <div class="card">
+      <h2>Produtos</h2>
+      <div id="produtosTableWrap"></div>
+    </div>
+
+    <div class="card">
+      <h2>Registrar movimentação</h2>
+      <form id="movForm" class="mov-row">
+        <div class="field">
+          <label>Tipo</label>
+          <div class="mov-toggle">
+            <button type="button" class="active entrada" data-tipo="entrada">Entrada</button>
+            <button type="button" class="saida" data-tipo="saida">Saída</button>
+          </div>
+        </div>
+        <div class="field">
+          <label for="mProduto">Produto</label>
+          <select id="mProduto" required></select>
+        </div>
+        <div class="field">
+          <label for="mQtd">Quantidade</label>
+          <input type="number" id="mQtd" min="1" step="1" placeholder="0" required>
+        </div>
+        <div class="field">
+          <label for="mMotivo">Motivo</label>
+          <input type="text" id="mMotivo" placeholder="Ex.: compra, venda, ajuste...">
+        </div>
+        <button class="btn btn-primary" type="submit">Registrar</button>
+      </form>
+    </div>
+
+    <div class="card">
+      <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:14px;">
+        <h2 style="margin:0;">Últimas movimentações</h2>
+        <div class="toolbar" style="display:flex; gap:10px;">
+          <button class="btn btn-outline" id="btnPrint" type="button">Imprimir</button>
+          <button class="btn btn-outline" id="btnPdf" type="button">Baixar PDF</button>
+          <button class="btn btn-outline" id="btnClear" type="button">Limpar tudo</button>
+        </div>
+      </div>
+      <div class="mov-list" id="movList"></div>
+    </div>
+
+    <p class="meta-footer">
+      Desenvolvido por Andreia Brandborg · <a href="mailto:andreiabrandborg@gmail.com">andreiabrandborg@gmail.com</a><br>
+      Os dados ficam salvos apenas neste navegador — nada é enviado para nenhum servidor.<br>
+      <span style="opacity:0.75;">Projeto de portfólio, desenvolvido para fins de demonstração.</span>
+    </p>
+  </main>
+
+<script>
+(function(){
+  "use strict";
+
+  var STORAGE_PROD = 'gf-estoque-produtos-v1';
+  var STORAGE_MOV = 'gf-estoque-movs-v1';
+  var currentMovTipo = 'entrada';
+  var produtos = [];
+  var movs = [];
+
+  function loadScriptOnce(url){
+    return new Promise(function(resolve){
+      var s = document.createElement('script');
+      s.src = url; s.onload = function(){ resolve(true); }; s.onerror = function(){ resolve(false); };
+      document.head.appendChild(s);
+    });
+  }
+  async function ensureJsPDF(){
+    var ctor = window.jspdf && window.jspdf.jsPDF;
+    if (ctor) return ctor;
+    await loadScriptOnce('https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.2/jspdf.umd.min.js');
+    ctor = window.jspdf && window.jspdf.jsPDF;
+    if (ctor) return ctor;
+    await loadScriptOnce('https://cdn.jsdelivr.net/npm/jspdf@2.5.2/dist/jspdf.umd.min.js');
+    ctor = window.jspdf && window.jspdf.jsPDF;
+    return ctor || null;
+  }
+
+  function load(){
+    try { produtos = JSON.parse(localStorage.getItem(STORAGE_PROD) || '[]'); } catch(e){ produtos = []; }
+    try { movs = JSON.parse(localStorage.getItem(STORAGE_MOV) || '[]'); } catch(e){ movs = []; }
+  }
+  function saveProdutos(){ try { localStorage.setItem(STORAGE_PROD, JSON.stringify(produtos)); } catch(e){} }
+  function saveMovs(){ try { localStorage.setItem(STORAGE_MOV, JSON.stringify(movs)); } catch(e){} }
+
+  function fmtBRL(n){
+    var v = parseFloat(n); if (isNaN(v)) v = 0;
+    return v.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+  }
+  function escapeHtml(s){
+    return String(s || '').replace(/[&<>"']/g, function(c){
+      return { '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[c];
+    });
+  }
+  function fmtDateTimeBR(ts){
+    var d = new Date(ts);
+    return d.toLocaleDateString('pt-BR') + ' ' + d.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+  }
+
+  function renderStats(){
+    var totalUnid = produtos.reduce(function(s,p){ return s + p.qtd; }, 0);
+    var totalValor = produtos.reduce(function(s,p){ return s + p.qtd * p.valorUnit; }, 0);
+    var baixo = produtos.filter(function(p){ return p.qtd <= p.min; }).length;
+    document.getElementById('statQtdProdutos').textContent = produtos.length;
+    document.getElementById('statUnidades').textContent = totalUnid;
+    document.getElementById('statValor').textContent = fmtBRL(totalValor);
+    document.getElementById('statBaixo').textContent = baixo;
+  }
+
+  function renderProdutos(){
+    var wrap = document.getElementById('produtosTableWrap');
+    if (!produtos.length){
+      wrap.innerHTML = '<div class="empty">Nenhum produto cadastrado ainda.</div>';
+      return;
+    }
+    var rows = produtos.map(function(p){
+      var low = p.qtd <= p.min;
+      return '<tr class="' + (low ? 'low' : '') + '">' +
+        '<td>' + escapeHtml(p.nome) + (low ? '<span class="low-tag">Estoque baixo</span>' : '') + '</td>' +
+        '<td class="num qty-badge ' + (low ? 'low' : '') + '">' + p.qtd + '</td>' +
+        '<td class="num">' + p.min + '</td>' +
+        '<td class="num">' + fmtBRL(p.valorUnit) + '</td>' +
+        '<td class="num">' + fmtBRL(p.qtd * p.valorUnit) + '</td>' +
+        '<td><button class="del-btn" data-id="' + p.id + '" title="Remover produto" type="button">✕</button></td>' +
+      '</tr>';
+    }).join('');
+    wrap.innerHTML = '<table class="produtos"><thead><tr>' +
+      '<th>Produto</th><th>Qtd.</th><th>Mín.</th><th>Vl. unit.</th><th>Vl. total</th><th></th>' +
+      '</tr></thead><tbody>' + rows + '</tbody></table>';
+
+    wrap.querySelectorAll('.del-btn').forEach(function(btn){
+      btn.addEventListener('click', function(){
+        var id = btn.getAttribute('data-id');
+        if (!confirm('Remover este produto do cadastro?')) return;
+        produtos = produtos.filter(function(p){ return String(p.id) !== id; });
+        saveProdutos(); renderAll();
+      });
+    });
+  }
+
+  function renderProdutoSelect(){
+    var sel = document.getElementById('mProduto');
+    var current = sel.value;
+    sel.innerHTML = produtos.length ?
+      produtos.map(function(p){ return '<option value="' + p.id + '">' + escapeHtml(p.nome) + ' (' + p.qtd + ' em estoque)</option>'; }).join('') :
+      '<option value="">Cadastre um produto primeiro</option>';
+    if (current) sel.value = current;
+  }
+
+  function renderMovs(){
+    var list = document.getElementById('movList');
+    if (!movs.length){
+      list.innerHTML = '<div class="empty">Nenhuma movimentação registrada ainda.</div>';
+      return;
+    }
+    var sorted = movs.slice().sort(function(a,b){ return b.ts - a.ts; }).slice(0, 40);
+    list.innerHTML = sorted.map(function(m){
+      return '<div class="mv">' +
+        '<span><span class="tag ' + m.tipo + '">' + (m.tipo === 'entrada' ? 'Entrada' : 'Saída') + '</span> ' +
+        escapeHtml(m.produtoNome) + ' · ' + m.qtd + ' un.' + (m.motivo ? ' — ' + escapeHtml(m.motivo) : '') + '</span>' +
+        '<span>' + fmtDateTimeBR(m.ts) + '</span>' +
+      '</div>';
+    }).join('');
+  }
+
+  function renderAll(){
+    renderStats();
+    renderProdutos();
+    renderProdutoSelect();
+    renderMovs();
+  }
+
+  // ---------- cadastro de produto ----------
+  document.getElementById('prodForm').addEventListener('submit', function(e){
+    e.preventDefault();
+    var nome = document.getElementById('pNome').value.trim();
+    var qtd = parseInt(document.getElementById('pQtd').value, 10);
+    var valorUnit = parseFloat(document.getElementById('pValor').value);
+    var min = parseInt(document.getElementById('pMin').value, 10);
+    if (!nome || isNaN(qtd) || isNaN(valorUnit) || isNaN(min)) return;
+
+    produtos.push({ id: Date.now() + '-' + Math.random().toString(36).slice(2,7), nome: nome, qtd: qtd, valorUnit: valorUnit, min: min });
+    saveProdutos();
+    document.getElementById('prodForm').reset();
+    renderAll();
+  });
+
+  // ---------- movimentação ----------
+  document.querySelectorAll('.mov-toggle button').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      document.querySelectorAll('.mov-toggle button').forEach(function(b){ b.classList.remove('active'); });
+      btn.classList.add('active');
+      currentMovTipo = btn.getAttribute('data-tipo');
+    });
+  });
+
+  document.getElementById('movForm').addEventListener('submit', function(e){
+    e.preventDefault();
+    var prodId = document.getElementById('mProduto').value;
+    var qtd = parseInt(document.getElementById('mQtd').value, 10);
+    var motivo = document.getElementById('mMotivo').value.trim();
+    if (!prodId || isNaN(qtd) || qtd <= 0) return;
+
+    var prod = produtos.find(function(p){ return String(p.id) === String(prodId); });
+    if (!prod) return;
+
+    if (currentMovTipo === 'saida' && qtd > prod.qtd){
+      if (!confirm('A quantidade de saída (' + qtd + ') é maior que o estoque atual (' + prod.qtd + '). Continuar mesmo assim?')) return;
+    }
+
+    prod.qtd += currentMovTipo === 'entrada' ? qtd : -qtd;
+    saveProdutos();
+
+    movs.push({
+      id: Date.now() + '-' + Math.random().toString(36).slice(2,7),
+      tipo: currentMovTipo, produtoId: prod.id, produtoNome: prod.nome, qtd: qtd, motivo: motivo, ts: Date.now()
+    });
+    saveMovs();
+
+    document.getElementById('mQtd').value = '';
+    document.getElementById('mMotivo').value = '';
+    renderAll();
+  });
+
+  document.getElementById('btnClear').addEventListener('click', function(){
+    if (!produtos.length && !movs.length) return;
+    if (!confirm('Apagar todos os produtos e movimentações? Essa ação não pode ser desfeita.')) return;
+    produtos = []; movs = [];
+    saveProdutos(); saveMovs(); renderAll();
+  });
+
+  document.getElementById('btnPrint').addEventListener('click', function(){ window.print(); });
+
+  document.getElementById('btnPdf').addEventListener('click', async function(){
+    var btn = document.getElementById('btnPdf');
+    var original = btn.innerHTML;
+    btn.disabled = true; btn.innerHTML = 'Gerando…';
+    try {
+      var jsPDFCtor = await ensureJsPDF();
+      if (!jsPDFCtor){ alert('Não foi possível carregar o gerador de PDF. Verifique sua conexão.'); return; }
+
+      var INK = [36,21,51], SOFT = [107,90,128], ACCENT = [124,58,237], LINE = [230,220,245], WARN = [196,122,16];
+      var doc = new jsPDFCtor({ orientation: 'landscape', unit: 'pt', format: 'a4' });
+      var PW = doc.internal.pageSize.getWidth(), PH = doc.internal.pageSize.getHeight();
+
+      doc.setFillColor(255,255,255); doc.rect(0,0,PW,PH,'F');
+      doc.setTextColor(INK[0],INK[1],INK[2]); doc.setFont('helvetica','bold'); doc.setFontSize(20);
+      doc.text('GESTÃO DE ESTOQUE', 40, 40);
+      doc.setFont('helvetica','normal'); doc.setFontSize(10.5); doc.setTextColor(SOFT[0],SOFT[1],SOFT[2]);
+      doc.text('Gerado em ' + new Date().toLocaleDateString('pt-BR'), 40, 58);
+
+      var y = 88;
+      var colX = [40, 340, 420, 500, 590];
+      doc.setFont('helvetica','bold'); doc.setFontSize(9); doc.setTextColor(SOFT[0],SOFT[1],SOFT[2]);
+      ['Produto','Qtd.','Mín.','Vl. unit.','Vl. total'].forEach(function(h,i){ doc.text(h, colX[i], y); });
+      y += 6;
+      doc.setDrawColor(LINE[0],LINE[1],LINE[2]); doc.line(40, y, PW - 40, y); y += 14;
+
+      var totalGeral = 0;
+      produtos.forEach(function(p){
+        if (y > 500){ doc.addPage(); y = 46; }
+        var low = p.qtd <= p.min;
+        doc.setFont('helvetica','normal'); doc.setFontSize(9.5);
+        doc.setTextColor(low ? WARN[0] : INK[0], low ? WARN[1] : INK[1], low ? WARN[2] : INK[2]);
+        doc.text(p.nome.slice(0,48) + (low ? '  (estoque baixo)' : ''), colX[0], y);
+        doc.text(String(p.qtd), colX[1], y);
+        doc.text(String(p.min), colX[2], y);
+        doc.text(fmtBRL(p.valorUnit), colX[3], y);
+        doc.text(fmtBRL(p.qtd * p.valorUnit), colX[4], y);
+        totalGeral += p.qtd * p.valorUnit;
+        y += 15;
+      });
+
+      y += 14;
+      doc.setDrawColor(LINE[0],LINE[1],LINE[2]); doc.line(40, y, PW - 40, y); y += 20;
+      doc.setFont('helvetica','bold'); doc.setFontSize(12); doc.setTextColor(ACCENT[0],ACCENT[1],ACCENT[2]);
+      doc.text('Valor total em estoque: ' + fmtBRL(totalGeral), 40, y);
+      doc.setTextColor(INK[0],INK[1],INK[2]);
+      doc.text('Produtos cadastrados: ' + produtos.length, 320, y);
+
+      doc.save('estoque-' + new Date().toISOString().slice(0,10) + '.pdf');
+    } catch(err){
+      alert('Ocorreu um erro ao gerar o PDF. Tente novamente.');
+    } finally {
+      btn.disabled = false; btn.innerHTML = original;
+    }
+  });
+
+  load();
+  renderAll();
+})();
+</script>
+</body>
+</html>
