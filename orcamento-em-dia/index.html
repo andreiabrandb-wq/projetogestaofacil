@@ -230,6 +230,7 @@
   </div>
 
   <div class="toolbar">
+    <button class="ghost" id="sortBtn" type="button">Ordenar por data</button>
     <button class="ghost" id="printBtn" type="button">Imprimir</button>
     <button class="ghost" id="exportPdfBtn" type="button">Baixar PDF</button>
     <button class="ghost" id="clearBtn" type="button">Limpar tudo</button>
@@ -607,6 +608,19 @@
 
   document.getElementById('clearBtn').addEventListener('click', function(){
     rows = [newRow({ data: todayISO(), tipo: 'despesa', categoria: defaultCategoryFor('despesa') })];
+    renderAll();
+  });
+
+  document.getElementById('sortBtn').addEventListener('click', function(){
+    // ordem crescente de data; lançamentos sem data vão para o fim; mantém a ordem original em caso de empate
+    var indexed = rows.map(function(r, i){ return { r: r, i: i }; });
+    indexed.sort(function(x, y){
+      var dx = x.r.data || '9999-99-99', dy = y.r.data || '9999-99-99';
+      if (dx < dy) return -1;
+      if (dx > dy) return 1;
+      return x.i - y.i;
+    });
+    rows = indexed.map(function(o){ return o.r; });
     renderAll();
   });
 
