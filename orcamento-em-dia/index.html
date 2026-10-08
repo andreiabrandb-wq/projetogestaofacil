@@ -673,6 +673,31 @@
     };
   }
 
+  // período (mês/ano) das despesas lançadas, para o título do PDF
+  function periodoDoPdf(){
+    var MESES = ['JANEIRO','FEVEREIRO','MARÇO','ABRIL','MAIO','JUNHO','JULHO','AGOSTO','SETEMBRO','OUTUBRO','NOVEMBRO','DEZEMBRO'];
+    function chaves(lista){
+      var set = {};
+      lista.forEach(function(r){
+        if (r.data && /^\d{4}-\d{2}/.test(r.data)) set[r.data.slice(0, 7)] = true;
+      });
+      return Object.keys(set).sort();
+    }
+    var ks = chaves(rows.filter(function(r){ return r.tipo === 'despesa'; }));
+    if (!ks.length) ks = chaves(rows);
+    if (!ks.length){
+      var d = new Date();
+      ks = [d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0')];
+    }
+    function nome(k){ return MESES[parseInt(k.slice(5, 7), 10) - 1]; }
+    var first = ks[0], last = ks[ks.length - 1];
+    var label;
+    if (first === last) label = nome(first) + ' DE ' + first.slice(0, 4);
+    else if (first.slice(0, 4) === last.slice(0, 4)) label = nome(first) + ' A ' + nome(last) + ' DE ' + first.slice(0, 4);
+    else label = nome(first) + ' DE ' + first.slice(0, 4) + ' A ' + nome(last) + ' DE ' + last.slice(0, 4);
+    return { label: label, file: first === last ? first : first + '_a_' + last };
+  }
+
   async function exportPDF(){
     var btn = document.getElementById('exportPdfBtn');
     var originalLabel = btn.innerHTML;
@@ -696,7 +721,8 @@
 
       doc.setFillColor(255,255,255); doc.rect(0,0,PW,PH,'F');
       doc.setTextColor(INK[0],INK[1],INK[2]); doc.setFont('helvetica','bold'); doc.setFontSize(22);
-      doc.text('ORÇAMENTO EM DIA', 40, 42);
+      var periodo = periodoDoPdf();
+      doc.text('ORÇAMENTO EM DIA — ' + periodo.label, 40, 42);
       doc.setFont('helvetica','normal'); doc.setFontSize(11); doc.setTextColor(SOFT[0],SOFT[1],SOFT[2]);
       doc.text('Controle de gastos e receitas — gerado em ' + new Date().toLocaleDateString('pt-BR'), 40, 60);
       doc.setDrawColor(INK[0],INK[1],INK[2]); doc.setLineWidth(1.4); doc.line(40, 72, PW - 40, 72);
@@ -746,7 +772,7 @@
       doc.text('Total de receitas: ' + totalReceitas + '   |   Total de despesas: ' + totalDespesas + '   |   Saldo do mês: ' + saldoMes, 40, afterTableY + 18);
 
       var blob = doc.output('blob');
-      var res = await downloads.save({ filename: 'orcamento-em-dia.pdf', data: blob });
+      var res = await downloads.save({ filename: 'orcamento-em-dia-' + periodo.file + '.pdf', data: blob });
       if (res) notify('PDF gerado! Confira a caixa de downloads do navegador.', false);
     } catch(err){
       if (!(err && err.code === 'declined')){
