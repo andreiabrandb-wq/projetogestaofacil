@@ -256,7 +256,6 @@
 
   <footer class="hint">Os dados ficam salvos apenas neste navegador — nada é enviado para nenhum servidor.
     <div class="credit">Desenvolvido por <strong>Andreia Brandborg</strong> · Para dúvidas, sugestões ou orçamentos, entre em contato: <a href="mailto:andreiabrandborg@gmail.com" style="color:inherit;">andreiabrandborg@gmail.com</a></div>
-    <div style="opacity:0.7; font-size:11.5px; margin-top:4px;">Projeto de portfólio, desenvolvido para fins de demonstração.</div>
   </footer>
 </div>
 
@@ -308,8 +307,8 @@
     return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
   }
 
-  var defaultCategories = ['Renda Mensal', 'Moradia', 'Alimentação', 'Transporte', 'Cartão de Crédito', 'Lazer', 'Saúde', 'Outros'];
-  var defaultBudgets = { 'Renda Mensal': 0, 'Moradia': 1200, 'Alimentação': 700, 'Transporte': 300, 'Cartão de Crédito': 500, 'Lazer': 200, 'Saúde': 250, 'Outros': 150 };
+  var defaultCategories = ['Renda Mensal', 'Moradia', 'Alimentação', 'Transporte', 'Cartão de Crédito', 'Lazer', 'Saúde', 'Educação', 'Outros'];
+  var defaultBudgets = { 'Renda Mensal': 0, 'Moradia': 1200, 'Alimentação': 700, 'Transporte': 300, 'Cartão de Crédito': 500, 'Lazer': 200, 'Saúde': 250, 'Educação': 300, 'Outros': 150 };
 
   // ---------- persistence ----------
   function saveState(){
@@ -352,6 +351,18 @@
           if (idxTransp >= 0) categories.splice(idxTransp + 1, 0, novaCat); else categories.push(novaCat);
         }
         localStorage.setItem('orc-migr-cartao', '1');
+        saveState();
+      }
+    } catch(e) {}
+    // migration: add "Educação" once for users who already have saved categories
+    try {
+      if (!localStorage.getItem('orc-migr-educacao')){
+        if (!categories.some(function(c){ return c.name === 'Educação'; })){
+          var idxOutros = categories.findIndex(function(c){ return c.name === 'Outros'; });
+          var catEdu = newCategory({ name: 'Educação', budget: 0 });
+          if (idxOutros >= 0) categories.splice(idxOutros, 0, catEdu); else categories.push(catEdu);
+        }
+        localStorage.setItem('orc-migr-educacao', '1');
         saveState();
       }
     } catch(e) {}
