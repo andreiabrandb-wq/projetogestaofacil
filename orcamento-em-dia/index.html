@@ -16,14 +16,14 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.2/jspdf.umd.min.js"></script>
 <style>
   :root {
-    --ink: #0d2b20;
-    --ink-soft: #3f6a58;
-    --paper: #dcf0e6;
+    --ink: #0f1c3d;
+    --ink-soft: #56628a;
+    --paper: #f5f7fd;
     --paper-raised: #ffffff;
-    --border: #bfe1cf;
-    --accent: #0a8a6e;
-    --accent-2: #0ea86a;
-    --accent-soft: #cdefdf;
+    --border: #e2e6f5;
+    --accent: #2f5fe0;
+    --accent-2: #5b8cff;
+    --accent-soft: #e8edfc;
     --good: #0a8a6e;
     --bad: #e0523f;
     --bad-soft: #fce9e6;
@@ -32,20 +32,20 @@
     --radius-s: 10px;
     --radius-m: 16px;
     --radius-l: 22px;
-    --shadow: 0 1px 3px rgba(18,51,40,0.06), 0 8px 24px -12px rgba(18,51,40,0.14);
+    --shadow: 0 1px 3px rgba(15,28,61,0.06), 0 8px 24px -12px rgba(15,28,61,0.16);
   }
   @media (prefers-color-scheme: dark) {
     :root:not([data-theme="light"]) {
-      --ink: #e4f3ec; --ink-soft: #93b3a5; --paper: #0a1512; --paper-raised: #10201a;
-      --border: #1f3a30; --accent: #2dd4bf; --accent-2: #22c55e; --accent-soft: #12291f;
-      --good: #2dd4bf; --bad: #f0796a; --bad-soft: #3a221f; --warn: #e0ab5c; --warn-soft: #362a17;
+      --ink: #e7eaf0; --ink-soft: #98a3c2; --paper: #0b0e1a; --paper-raised: #131a2c;
+      --border: #232c47; --accent: #7c9bff; --accent-2: #5b8cff; --accent-soft: #1c2740;
+      --good: #34d399; --bad: #f0796a; --bad-soft: #3a221f; --warn: #e0ab5c; --warn-soft: #362a17;
       --shadow: 0 1px 3px rgba(0,0,0,0.3), 0 8px 24px -12px rgba(0,0,0,0.5);
     }
   }
   :root[data-theme="dark"] {
-    --ink: #e4f3ec; --ink-soft: #93b3a5; --paper: #0a1512; --paper-raised: #10201a;
-    --border: #1f3a30; --accent: #2dd4bf; --accent-2: #22c55e; --accent-soft: #12291f;
-    --good: #2dd4bf; --bad: #f0796a; --bad-soft: #3a221f; --warn: #e0ab5c; --warn-soft: #362a17;
+    --ink: #e7eaf0; --ink-soft: #98a3c2; --paper: #0b0e1a; --paper-raised: #131a2c;
+    --border: #232c47; --accent: #7c9bff; --accent-2: #5b8cff; --accent-soft: #1c2740;
+    --good: #34d399; --bad: #f0796a; --bad-soft: #3a221f; --warn: #e0ab5c; --warn-soft: #362a17;
     --shadow: 0 1px 3px rgba(0,0,0,0.3), 0 8px 24px -12px rgba(0,0,0,0.5);
   }
 
@@ -60,7 +60,7 @@
   .brand { display: flex; align-items: center; gap: 11px; }
   .brand .mark {
     width: 38px; height: 38px; border-radius: 11px; flex: none;
-    background: linear-gradient(150deg, #0d9488, #0a6e57);
+    background: linear-gradient(150deg, #2f5fe0, #6ea0ff);
     display: flex; align-items: center; justify-content: center; color: #fff;
   }
   .brand h1 { font-size: 20px; font-weight: 700; margin: 0; letter-spacing: -0.01em; }
@@ -85,8 +85,8 @@
   /* Balance hero card */
   .balance-card {
     border-radius: var(--radius-l); padding: 26px 28px; margin-bottom: 20px;
-    background: linear-gradient(135deg, #0c4a40 0%, #0a8a6e 48%, #16a34a 100%);
-    color: #fff; box-shadow: 0 18px 40px -16px rgba(10,110,87,0.55);
+    background: linear-gradient(135deg, #0d1730 0%, #12316f 55%, #2f5fe0 100%);
+    color: #fff; box-shadow: 0 18px 40px -16px rgba(13,23,48,0.55);
     display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 20px;
   }
   .balance-card .saldo-label { font-size: 12.5px; text-transform: uppercase; letter-spacing: 0.06em; opacity: 0.85; margin-bottom: 6px; }
@@ -120,7 +120,7 @@
   .panel-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
   .panel-head h3 { font-size: 16px; margin: 0; }
   .panel-head .add-row-btn {
-    border: none; background: var(--accent-soft); color: var(--accent); font: 700 12px 'Inter', sans-serif;
+    border: none; background: #f2b705; color: #1b1400; font: 700 12px 'Inter', sans-serif;
     padding: 7px 13px; border-radius: 999px; cursor: pointer;
   }
   .panel-head .add-row-btn:hover { filter: brightness(0.95); }
@@ -530,7 +530,7 @@
     var gastos = gastosPorCategoria();
     var labels = Object.keys(gastos).filter(function(k){ return gastos[k] > 0; });
     var data = labels.map(function(k){ return gastos[k]; });
-    var palette = ['#0d9488', '#2f5fe0', '#e0523f', '#9b51e0', '#d98f2b', '#2dd4bf', '#eb5757', '#647089'];
+    var palette = ['#2f5fe0', '#0d9488', '#e0523f', '#9b51e0', '#d98f2b', '#2dd4bf', '#eb5757', '#647089'];
     var canvas = document.getElementById('pieChart');
     if (!canvas || typeof Chart === 'undefined') return;
     if (pieChartInstance) pieChartInstance.destroy();
@@ -646,7 +646,7 @@
     toast.style.cssText = 'position:fixed; left:50%; bottom:24px; transform:translateX(-50%); z-index:9999;' +
       'max-width:90vw; padding:12px 18px; border-radius:8px; font:600 13.5px Inter, sans-serif; text-align:center;' +
       'box-shadow:0 8px 24px rgba(0,0,0,0.35); color:#fff;' +
-      (isError ? 'background:#e0523f;' : 'background:#0d9488;');
+      (isError ? 'background:#e0523f;' : 'background:#2f5fe0;');
     document.body.appendChild(toast);
     setTimeout(function(){ if (toast.parentNode) toast.remove(); }, 6000);
   }
