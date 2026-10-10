@@ -47,205 +47,412 @@
   h1, h2, .display { font-family: 'Space Grotesk', system-ui, sans-serif; }
   a { color: inherit; }
 
-  /* ---------- nav ---------- */
-  nav.top {
-    display: flex; align-items: center; justify-content: space-between;
-    max-width: 1180px; margin: 0 auto; padding: 20px 24px;
-  }
-  nav.top .brand { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 17px; letter-spacing: -0.01em; }
-  nav.top .brand .mark {
-    width: 30px; height: 30px; border-radius: 9px; background: linear-gradient(135deg, var(--accent), #6ea0ff);
-    flex: none;
-  }
-  nav.top .cta-small {
-    background: var(--gold); color: var(--gold-ink); font-weight: 700; font-size: 13.5px;
-    padding: 9px 18px; border-radius: 8px; text-decoration: none; box-shadow: 0 4px 14px -4px rgba(242,183,5,0.5);
-  }
 
-  /* ---------- hero ---------- */
-  .hero {
-    position: relative; overflow: hidden; border-radius: 0 0 28px 28px; margin: 0 auto; max-width: 1180px;
-    padding: 84px 32px 76px; text-align: center; isolation: isolate;
+  /* ================= capa, cartão de números e rodapé ================= */
+  :root {
+    --gf-marinho: #0d1730; --gf-azul: #12316f; --gf-ciano: #29b6ff; --gf-amarelo: #f2b705; --gf-amarelo-texto: #1b1400;
+    --gf-titulos: "Space Grotesk", Inter, system-ui, sans-serif;
   }
-  .hero::before {
-    content: ""; position: absolute; inset: 0; z-index: -2;
-    background-image: url("https://images.unsplash.com/photo-1521791136064-7986c2920216?auto=format&fit=crop&w=1600&q=75");
-    background-size: cover; background-position: center 30%;
-  }
-  .hero::after {
-    content: ""; position: absolute; inset: 0; z-index: -1;
-    background:
-      linear-gradient(180deg, rgba(8,16,38,0.86) 0%, rgba(10,20,48,0.82) 45%, rgba(12,24,56,0.92) 100%),
-      radial-gradient(700px 400px at 50% 0%, rgba(47,95,224,0.28), transparent 70%);
-  }
-  .hero .eyebrow {
-    display: inline-block; color: #cfe0ff; font-size: 13px; font-weight: 600; letter-spacing: 0.04em;
-    text-transform: uppercase; background: rgba(255,255,255,0.10); border: 1px solid rgba(255,255,255,0.18);
-    padding: 6px 14px; border-radius: 999px; margin-bottom: 22px;
-  }
-  .hero h1 {
-    color: #ffffff; font-size: 42px; line-height: 1.15; letter-spacing: -0.02em; margin: 0 0 16px;
-    text-shadow: 0 2px 18px rgba(0,0,0,0.35); max-width: 780px; margin-left: auto; margin-right: auto;
-  }
-  .hero p {
-    color: #d7e0fa; font-size: 17px; line-height: 1.6; max-width: 560px; margin: 0 auto 32px;
-  }
-  .hero .cta-row { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; margin-bottom: 38px; }
-  .btn-gold {
-    background: var(--gold); color: var(--gold-ink); font-weight: 700; font-size: 15px;
-    padding: 14px 28px; border-radius: 10px; text-decoration: none; box-shadow: 0 10px 24px -8px rgba(242,183,5,0.55);
-    transition: transform .15s ease;
-  }
-  .btn-gold:hover { transform: translateY(-2px); }
-  .btn-ghost-light {
-    background: rgba(255,255,255,0.08); color: #fff; font-weight: 600; font-size: 15px;
-    padding: 14px 26px; border-radius: 10px; text-decoration: none; border: 1px solid rgba(255,255,255,0.35);
-  }
-  .hero .trust {
-    display: flex; gap: 28px; justify-content: center; flex-wrap: wrap; font-size: 13.5px; color: #b9c7ec;
-  }
-  .hero .trust span { display: inline-flex; align-items: center; gap: 7px; }
-  .hero .trust svg { width: 16px; height: 16px; color: #7fe0c2; flex: none; }
+  .gf-topo *, .gf-capa *, .gf-numeros, .gf-numeros *, .gf-rodape * { box-sizing: border-box; }
+  .gf-topo, .gf-capa, .gf-rodape { font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+  .gf-topo a:focus-visible, .gf-capa a:focus-visible, .gf-rodape a:focus-visible { outline: 3px solid var(--gf-amarelo); outline-offset: 3px; }
 
-  /* ---------- tools ---------- */
-  .tools { max-width: 1180px; margin: 0 auto; padding: 74px 24px 40px; }
-  .tools .head { text-align: center; max-width: 560px; margin: 0 auto 42px; }
-  .tools .head .kicker { color: var(--accent); font-weight: 700; font-size: 13px; letter-spacing: 0.05em; text-transform: uppercase; margin-bottom: 10px; }
-  .tools .head h2 { font-size: 30px; margin: 0 0 10px; letter-spacing: -0.02em; }
-  .tools .head p { color: var(--ink-soft); font-size: 15.5px; line-height: 1.55; margin: 0; }
+  /* ---------- CABEÇALHO ---------- */
+  .gf-topo { position: sticky; top: 0; z-index: 40; padding: 10px 18px; }
+  .gf-topo-dentro { max-width: 1240px; margin: 0 auto; display: flex; align-items: center; gap: 16px; padding: 10px 12px 10px 18px; border-radius: 18px;
+    background: rgba(255, 255, 255, .8); backdrop-filter: blur(14px) saturate(1.4); -webkit-backdrop-filter: blur(14px) saturate(1.4);
+    border: 1px solid rgba(226, 231, 240, .9); box-shadow: 0 10px 34px rgba(13, 23, 48, .1); }
+  .gf-marca { display: flex; align-items: center; gap: 10px; font-family: var(--gf-titulos); font-weight: 700; font-size: 18px; color: #111a33; text-decoration: none; white-space: nowrap; margin-right: auto; }
+  .gf-marca i { width: 34px; height: 34px; border-radius: 10px; background: linear-gradient(135deg, #5b8cff, #2f5be0); }
+  .gf-botao { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 14px 26px; border-radius: 12px; font-weight: 700; font-size: 16px;
+    text-decoration: none; border: 1px solid transparent; white-space: nowrap; transition: transform .18s, box-shadow .2s, background .2s; }
+  .gf-amarelo { background: var(--gf-amarelo); color: var(--gf-amarelo-texto); box-shadow: 0 8px 24px rgba(242, 183, 5, .35); }
+  .gf-amarelo:hover { box-shadow: 0 14px 34px rgba(242, 183, 5, .55); }
+  .gf-vidro { background: rgba(255, 255, 255, .1); color: #fff; border-color: rgba(255, 255, 255, .35); }
+  .gf-vidro:hover { background: rgba(255, 255, 255, .2); }
+  .gf-topo .gf-botao { padding: 10px 18px; font-size: 14px; }
+  .gf-menu { position: relative; }
+  .gf-menu summary { list-style: none; cursor: pointer; user-select: none; }
+  .gf-menu summary::-webkit-details-marker { display: none; }
+  .gf-menu summary span { transition: transform .2s; }
+  .gf-menu[open] summary span { transform: rotate(180deg); }
+  .gf-menu-lista { position: absolute; right: 0; top: calc(100% + 12px); min-width: 280px; padding: 8px; border-radius: 16px; background: #fff; border: 1px solid #e2e7f0;
+    box-shadow: 0 24px 60px rgba(13, 23, 48, .22); display: grid; animation: gf-entrar .25s ease both; }
+  .gf-menu-lista a { display: flex; align-items: center; gap: 10px; white-space: nowrap; padding: 11px 14px; border-radius: 10px; color: #111a33; font-weight: 600; font-size: 15px; text-decoration: none; }
+  .gf-menu-lista a::before { content: ""; width: 9px; height: 9px; border-radius: 50%; background: var(--gf-cor); flex: none; }
+  .gf-menu-lista a:hover, .gf-menu-lista a:focus-visible { background: #eef3fd; }
 
-  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 22px; }
-  a.card {
-    display: block; background: var(--paper-raised); border: 1px solid var(--border); border-radius: 16px;
-    padding: 30px; text-decoration: none; color: inherit; box-shadow: var(--shadow-card);
-    transition: transform .18s ease, box-shadow .18s ease; position: relative; overflow: hidden;
-  }
-  a.card::before {
-    content: ""; position: absolute; top: 0; left: 0; right: 0; height: 4px;
-    background: linear-gradient(90deg, var(--accent), var(--gold));
-    transform: scaleX(0); transform-origin: left; transition: transform .25s ease;
-  }
-  a.card:hover { transform: translateY(-4px); box-shadow: 0 24px 46px -16px rgba(15,28,61,0.32); }
-  a.card:hover::before { transform: scaleX(1); }
-  a.card .icon {
-    width: 48px; height: 48px; border-radius: 12px; background: var(--accent-soft); color: var(--accent);
-    display: flex; align-items: center; justify-content: center; margin-bottom: 18px;
-  }
-  a.card h3 { font-size: 20px; margin: 0 0 9px; font-family: 'Space Grotesk', system-ui, sans-serif; }
-  a.card p { color: var(--ink-soft); font-size: 14.5px; line-height: 1.55; margin: 0 0 16px; }
-  a.card .cta { font-size: 13px; font-weight: 700; color: var(--accent); display: inline-flex; align-items: center; gap: 5px; }
+  /* ---------- CAPA ---------- */
+  .gf-capa { position: relative; isolation: isolate; overflow: hidden; margin: 0 18px; border-radius: 28px; color: #fff;
+    background: radial-gradient(115% 95% at 32% 38%, var(--gf-azul) 0%, #0f2350 42%, var(--gf-marinho) 80%);
+    min-height: min(86vh, 780px); padding: 64px 0 86px;
+    display: grid; grid-template-columns: minmax(0, 1fr); grid-template-rows: 1fr auto; grid-template-areas: "texto" "faixas"; }
 
-  footer { text-align: center; margin: 50px auto 0; padding: 26px 20px 50px; font-size: 12.5px; color: var(--ink-soft); }
-  footer a { color: inherit; }
+  /* cenário animado, no estilo do banner do LinkedIn */
+  .gf-cena { position: absolute; inset: -4%; z-index: -3; width: 108%; height: 108%; pointer-events: none;
+    transform: translate3d(var(--gf-px, 0px), var(--gf-py, 0px), 0); transition: transform .5s ease-out; }
+  .gf-cena .arcos { fill: none; stroke: var(--gf-ciano); stroke-width: 1.5; opacity: .28; transform-origin: 720px 400px; animation: gf-girar 80s linear infinite; }
+  .gf-cena .arcos circle:nth-child(even) { opacity: .6; }
+  @keyframes gf-girar { to { transform: rotate(360deg); } }
+  .gf-cena .predios { fill: #132f66; opacity: .5; }
+  .gf-cena .jan { fill: #7fd0ff; opacity: .15; animation: gf-janela 6s ease-in-out infinite; }
+  @keyframes gf-janela { 50% { opacity: .7; } }
+  .gf-cena .barra { fill: url(#gf-grad-barra); transform-box: fill-box; transform-origin: 50% 100%; animation: gf-crescer 7s cubic-bezier(.2, .8, .2, 1) infinite; }
+  @keyframes gf-crescer { 0% { transform: scaleY(0); } 18%, 82% { transform: scaleY(1); } 100% { transform: scaleY(0); } }
+  .gf-cena .linha { fill: none; stroke: #8fdcff; stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 1; stroke-dashoffset: 1; filter: drop-shadow(0 0 8px rgba(41, 182, 255, .9)); animation: gf-tracar 7s ease-in-out infinite; }
+  @keyframes gf-tracar { 0%, 14% { stroke-dashoffset: 1; } 42%, 84% { stroke-dashoffset: 0; opacity: 1; } 100% { stroke-dashoffset: 0; opacity: 0; } }
+  .gf-cena .ponto { fill: #fff; opacity: 0; filter: drop-shadow(0 0 6px #29b6ff); transform-box: fill-box; transform-origin: center; animation: gf-ponto 7s ease-out infinite; }
+  @keyframes gf-ponto { 0%, 4% { opacity: 0; transform: scale(0); } 10% { opacity: 1; transform: scale(1.6); } 16%, 70% { opacity: 1; transform: scale(1); } 86%, 100% { opacity: 0; } }
+  .gf-cena .part { fill: #9fdcff; opacity: 0; animation: gf-subir linear infinite; }
+  @keyframes gf-subir { 0% { opacity: 0; transform: translateY(40px); } 20%, 70% { opacity: .7; } 100% { opacity: 0; transform: translateY(-120px); } }
+  /* faixa de luz que atravessa a capa */
+  .gf-brilho { position: absolute; inset: 0; z-index: -2; pointer-events: none; overflow: hidden; }
+  .gf-brilho::before { content: ""; position: absolute; top: -20%; bottom: -20%; left: 0; width: 34%; transform: translateX(-140%) skewX(-18deg);
+    background: linear-gradient(90deg, transparent, rgba(143, 220, 255, .13), transparent); animation: gf-varrer 9s ease-in-out infinite; }
+  @keyframes gf-varrer { 0%, 30% { transform: translateX(-140%) skewX(-18deg); } 75%, 100% { transform: translateX(420%) skewX(-18deg); } }
+  .gf-foco { position: absolute; inset: 0; z-index: -1; pointer-events: none; background: radial-gradient(380px circle at var(--gf-mx, 60%) var(--gf-my, 40%), rgba(143, 220, 255, .14), transparent 70%); }
 
-  @media (max-width: 560px) {
-    .hero { padding: 64px 20px 54px; border-radius: 0 0 20px 20px; }
-    .hero h1 { font-size: 30px; }
+
+  .gf-texto { grid-area: texto; align-self: center; justify-self: center; max-width: 1040px; padding: 20px 20px 44px; text-align: center; z-index: 1; }
+  .gf-selo { display: inline-block; padding: 8px 16px; border-radius: 999px; font-size: 13px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase;
+    color: #d9f0ff; background: rgba(41, 182, 255, .14); border: 1px solid rgba(143, 220, 255, .4); }
+  .gf-capa h1 { font-family: var(--gf-titulos); font-weight: 700; font-size: clamp(32px, 5.6vw, 70px); line-height: 1.1; text-wrap: balance; letter-spacing: -.015em; margin: 22px 0 18px; text-shadow: 0 2px 24px rgba(4, 18, 48, .6); }
+  .gf-troca { display: block; position: relative; height: 1.18em; overflow: hidden; color: var(--gf-amarelo); }
+  .gf-troca span { position: absolute; inset: 0; transform: translateY(105%); opacity: 0; transition: transform .6s cubic-bezier(.2, .8, .2, 1), opacity .4s; white-space: nowrap; }
+  .gf-troca span.gf-atual { transform: none; opacity: 1; }
+  .gf-troca span.gf-saiu { transform: translateY(-105%); opacity: 0; }
+  .gf-troca.gf-clicavel { cursor: pointer; }
+  .gf-troca.gf-clicavel:hover span.gf-atual { text-decoration: underline; text-decoration-thickness: 3px; text-underline-offset: 8px; }
+  #gf-abrir-texto { display: inline-block; transition: opacity .2s; }
+  #gf-abrir-texto.gf-some { opacity: 0; }
+  .gf-faixa a.gf-ativa { background: #fff; color: var(--gf-marinho); }
+  .gf-so-leitor { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+  .gf-sub { font-size: clamp(16px, 1.4vw, 18.5px); line-height: 1.6; color: #d6e6fa; max-width: 680px; margin: 0 auto 30px; }
+  .gf-acoes { display: flex; flex-wrap: wrap; gap: 14px; justify-content: center; }
+  .gf-acoes .gf-botao { min-width: 280px; }
+  .gf-faixas { grid-area: faixas; z-index: 1; width: 100%; padding: 16px 0 30px; display: grid; gap: 12px; overflow: hidden;
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent); mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent); }
+  .gf-faixa { display: flex; width: max-content; gap: 12px; animation: gf-correr 38s linear infinite; }
+  .gf-faixa.gf-volta { animation-direction: reverse; animation-duration: 46s; }
+  .gf-faixas:hover .gf-faixa, .gf-faixas:focus-within .gf-faixa { animation-play-state: paused; }
+  @keyframes gf-correr { to { transform: translateX(calc(-50% - 6px)); } }
+  .gf-faixa a { display: inline-flex; align-items: center; gap: 10px; padding: 12px 20px; border-radius: 999px; text-decoration: none; font-weight: 600; font-size: 15px; white-space: nowrap;
+    color: #e6f3ff; background: rgba(13, 23, 48, .62); border: 1px solid rgba(143, 220, 255, .26); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); transition: background .2s, color .2s, transform .2s; }
+  .gf-faixa a::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--gf-cor, var(--gf-amarelo)); }
+  .gf-faixa a:hover { background: #fff; color: var(--gf-marinho); transform: translateY(-3px); }
+  .gf-entra { opacity: 0; transform: translateY(20px); animation: gf-entrar .8s cubic-bezier(.2, .7, .2, 1) forwards; animation-delay: calc(var(--i, 0) * 110ms); }
+  @keyframes gf-entrar { to { opacity: 1; transform: none; } }
+
+  /* ---------- CARTÃO DE NÚMEROS ---------- */
+  .gf-numeros { position: relative; z-index: 2; list-style: none; width: calc(100% - 72px); max-width: 1000px; margin: -78px auto 0; padding: 0;
+    display: grid; grid-template-columns: repeat(4, 1fr); background: #fff; border-radius: 22px; box-shadow: 0 24px 60px rgba(13, 23, 48, .18);
+    font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    opacity: 0; transform: translateY(30px); transition: opacity .7s ease, transform .7s cubic-bezier(.2, .7, .2, 1); }
+  .gf-numeros.gf-visivel { opacity: 1; transform: none; }
+  .gf-numeros li { padding: 28px 16px; text-align: center; border-left: 1px solid #e8ecf4; transition: transform .2s; }
+  .gf-numeros li:first-child { border-left: 0; }
+  .gf-numeros li:hover { transform: translateY(-5px); }
+  .gf-numero { display: block; font-family: var(--gf-titulos); font-weight: 700; font-size: clamp(28px, 3.2vw, 40px); line-height: 1.1; color: #1f5fd6; font-variant-numeric: tabular-nums; }
+  .gf-legenda { display: block; margin-top: 8px; font-size: 14.5px; line-height: 1.35; color: #5b6680; }
+
+  /* ---------- RODAPÉ: apresentação no formato da capa do LinkedIn ---------- */
+  .gf-rodape { position: relative; isolation: isolate; overflow: hidden; margin: 64px 18px 18px; border-radius: 28px; color: #cfe2f7;
+    background: radial-gradient(110% 150% at 30% 30%, var(--gf-azul) 0%, #0f2350 45%, var(--gf-marinho) 82%); }
+  .gf-rodape-cena { position: absolute; inset: 0; z-index: -1; width: 100%; height: 100%; pointer-events: none; }
+  .gf-rodape-cena .arco { fill: none; stroke: var(--gf-ciano); stroke-width: 1.2; opacity: .3; }
+  .gf-rodape-cena .barra { fill: url(#gf-grad-barra-2); transform-box: fill-box; transform-origin: 50% 100%; animation: gf-crescer 7s cubic-bezier(.2, .8, .2, 1) infinite; }
+  .gf-rodape-cena .linha { fill: none; stroke: #8fdcff; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 1; stroke-dashoffset: 1; filter: drop-shadow(0 0 6px rgba(41, 182, 255, .9)); animation: gf-tracar 7s ease-in-out infinite; }
+  .gf-autora { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 2.3fr) minmax(0, 1fr); gap: 24px; align-items: start; padding: 44px clamp(22px, 4vw, 56px) 36px; }
+  .gf-micro { margin: 0; padding: 0; list-style: none; font-size: 11.5px; line-height: 2; letter-spacing: .28em; text-transform: uppercase; color: #b9d7f2; }
+  .gf-micro::after { content: ""; display: block; width: 34px; height: 2px; margin-top: 12px; background: var(--gf-ciano); }
+  .gf-coluna-direita { display: grid; justify-items: end; }
+  .gf-micro.gf-direita { justify-self: end; }
+  .gf-micro.gf-baixo { align-self: end; margin-top: 26px; }
+  .gf-apresenta { text-align: left; }
+  .gf-apresenta .gf-l1 { margin: 0; font-family: var(--gf-titulos); font-weight: 600; font-size: clamp(22px, 2.9vw, 38px); line-height: 1.15; letter-spacing: .02em; color: #fff; text-transform: uppercase; }
+  .gf-apresenta .gf-l1 span { color: #8fdcff; font-weight: 400; }
+  .gf-apresenta .gf-l2 { margin: 2px 0 0; font-family: var(--gf-titulos); font-weight: 700; font-size: clamp(24px, 3.3vw, 44px); line-height: 1.12; letter-spacing: .03em; text-transform: uppercase;
+    background: linear-gradient(90deg, #29b6ff, #7fd8ff 45%, #29b6ff 90%); background-size: 200% 100%; -webkit-background-clip: text; background-clip: text; color: transparent; animation: gf-reluzir 6s linear infinite; }
+  @keyframes gf-reluzir { to { background-position: -200% 0; } }
+  .gf-apresenta .gf-l3 { margin: 10px 0 0; font-size: clamp(13px, 1.4vw, 18px); letter-spacing: .3em; text-transform: uppercase; color: #fff; }
+  .gf-apresenta .gf-l4 { margin: 10px 0 0; font-size: clamp(13px, 1.3vw, 16.5px); letter-spacing: .14em; color: #dcecff; }
+  .gf-apresenta .gf-l5 { margin: 16px 0 0; font-size: clamp(14px, 1.3vw, 16.5px); font-style: italic; color: #fff; }
+  .gf-assina { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px 28px; padding: 22px clamp(22px, 4vw, 56px) 26px;
+    border-top: 1px solid rgba(143, 220, 255, .22); background: rgba(13, 23, 48, .45); }
+  .gf-assina p { margin: 0; font-size: 15px; line-height: 1.7; }
+  .gf-assina b { color: #fff; font-family: var(--gf-titulos); font-size: 17px; }
+  .gf-assina a.gf-link { color: var(--gf-amarelo); font-weight: 600; text-decoration: none; border-bottom: 1px solid rgba(242, 183, 5, .45); transition: border-color .2s; overflow-wrap: anywhere; }
+  .gf-assina a.gf-link:hover { border-color: var(--gf-amarelo); }
+  .gf-assina .gf-nota { margin-top: 2px; font-size: 13.5px; color: #9fc0e6; }
+  .gf-linkedin { display: inline-flex; align-items: center; gap: 10px; padding: 11px 18px 11px 12px; border-radius: 12px; background: #fff; color: #0a3f8f; font-weight: 700; font-size: 15px; text-decoration: none; white-space: nowrap; transition: transform .18s, box-shadow .2s; }
+  .gf-linkedin:hover { transform: translateY(-3px); box-shadow: 0 12px 28px rgba(0, 0, 0, .35); }
+  .gf-linkedin i { width: 28px; height: 28px; border-radius: 7px; background: #0a66c2; color: #fff; display: grid; place-items: center; font-style: normal; font-weight: 700; font-size: 16px; font-family: Arial, Helvetica, sans-serif; }
+
+  @media (max-width: 900px) {
+    .gf-topo { padding: 8px 10px; }
+    .gf-capa { margin: 0 10px; border-radius: 22px; min-height: 0; padding: 48px 0 70px; }
+    .gf-texto { padding: 0 18px 24px; }
+    .gf-acoes .gf-botao { flex: 1 1 100%; }
+    .gf-selo { font-size: 11.5px; padding: 7px 12px; }
+    .gf-cena { inset: 0; width: 100%; height: 100%; }
+    .gf-numeros { grid-template-columns: repeat(2, 1fr); width: calc(100% - 44px); margin-top: -62px; }
+    .gf-numeros li { padding: 20px 10px; }
+    .gf-numeros li:nth-child(3) { border-left: 0; }
+    .gf-numeros li:nth-child(n+3) { border-top: 1px solid #e8ecf4; }
+    .gf-rodape { margin: 48px 10px 10px; border-radius: 22px; }
+    .gf-acoes .gf-botao { min-width: 0; }
+    .gf-menu-lista { min-width: 250px; }
+    .gf-rodape-cena { opacity: .22; }
+    .gf-autora { grid-template-columns: minmax(0, 1fr); gap: 22px; padding: 34px 22px 28px; }
+    .gf-autora .gf-coluna-direita { display: flex; gap: 28px; }
+    .gf-micro.gf-direita { justify-self: start; }
+    .gf-micro.gf-baixo { margin-top: 0; align-self: start; }
+    .gf-micro { font-size: 10.5px; letter-spacing: .22em; }
+    .gf-assina { flex-direction: column; align-items: flex-start; padding: 20px 22px 24px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .gf-entra { opacity: 1; transform: none; animation: none; }
+    .gf-faixa, .gf-cena .arcos, .gf-cena .jan, .gf-cena .part, .gf-brilho::before, .gf-apresenta .gf-l2 { animation: none; }
+    .gf-rodape-cena .barra { animation: none; transform: none; }
+    .gf-rodape-cena .linha { animation: none; stroke-dashoffset: 0; }
+    .gf-cena .barra { animation: none; transform: none; }
+    .gf-cena .linha { animation: none; stroke-dashoffset: 0; }
+    .gf-cena .ponto { animation: none; opacity: 1; }
+    .gf-faixas { overflow-x: auto; }
+    .gf-cena, .gf-troca span { transition: none; }
+    .gf-numeros { opacity: 1; transform: none; transition: none; }
   }
 </style>
 </head>
 <body>
 
-  <nav class="top">
-    <div class="brand">
-      <div class="mark" aria-hidden="true"></div>
-      Gestão Fácil
+<!-- ============ CABEÇALHO ============ -->
+<header class="gf-topo">
+  <div class="gf-topo-dentro">
+    <a class="gf-marca" href="#inicio"><i aria-hidden="true"></i>Gestão Fácil</a>
+    <details class="gf-menu" id="gf-menu">
+      <summary class="gf-botao gf-amarelo">Ferramentas <span aria-hidden="true">▾</span></summary>
+      <nav class="gf-menu-lista" aria-label="Ferramentas">
+        <a href="./painel-financeiro/" style="--gf-cor:#3b6cf6">Painel Financeiro</a>
+        <a href="./ponto-certo/" style="--gf-cor:#f2a705">Ponto Certo</a>
+        <a href="./orcamento-em-dia/" style="--gf-cor:#14b88a">Orçamento em Dia</a>
+        <a href="./fluxo-caixa/" style="--gf-cor:#7a5cf0">Fluxo de Caixa em Tempo Real</a>
+        <a href="./leitor-xml/" style="--gf-cor:#ef6a52">Leitor de Nota Fiscal (XML)</a>
+        <a href="./buscador-ncm/" style="--gf-cor:#1aa3d9">Buscador de NCM</a>
+        <a href="./gestao-estoque/" style="--gf-cor:#d9488b">Gestão de Estoque</a>
+      </nav>
+    </details>
+  </div>
+</header>
+
+<!-- ============ CAPA ============ -->
+<section class="gf-capa" id="inicio">
+  <svg class="gf-cena" viewBox="0 0 1440 800" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
+    <defs><linearGradient id="gf-grad-barra" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5cc8ff"/><stop offset="1" stop-color="#1668d8" stop-opacity=".35"/></linearGradient></defs>
+    <g class="arcos"><circle cx="720" cy="400" r="170" stroke-dasharray="4 10"/><circle cx="720" cy="400" r="250" stroke-dasharray="120 40"/><circle cx="720" cy="400" r="340" stroke-dasharray="2 14"/><circle cx="720" cy="400" r="430" stroke-dasharray="260 90"/><circle cx="720" cy="400" r="540" stroke-dasharray="6 18"/></g>
+    <g class="predios"><rect x="860" y="553" width="56" height="247"/><rect class="jan" x="868" y="567" width="40" height="3" style="animation-delay:-0.3s"/><rect class="jan" x="868" y="619" width="40" height="3" style="animation-delay:-3.5s"/><rect class="jan" x="868" y="671" width="40" height="3" style="animation-delay:-0.5s"/><rect class="jan" x="868" y="697" width="40" height="3" style="animation-delay:-1.4s"/><rect class="jan" x="868" y="749" width="40" height="3" style="animation-delay:-3.4s"/><rect x="932" y="335" width="34" height="465"/><rect class="jan" x="940" y="375" width="18" height="3" style="animation-delay:-1.3s"/><rect class="jan" x="940" y="427" width="18" height="3" style="animation-delay:-2.5s"/><rect class="jan" x="940" y="453" width="18" height="3" style="animation-delay:-3.4s"/><rect class="jan" x="940" y="531" width="18" height="3" style="animation-delay:-3.4s"/><rect class="jan" x="940" y="557" width="18" height="3" style="animation-delay:-0.6s"/><rect class="jan" x="940" y="661" width="18" height="3" style="animation-delay:-3.2s"/><rect class="jan" x="940" y="713" width="18" height="3" style="animation-delay:-5.5s"/><rect class="jan" x="940" y="739" width="18" height="3" style="animation-delay:-1.5s"/><rect class="jan" x="940" y="765" width="18" height="3" style="animation-delay:-4.7s"/><rect x="972" y="362" width="56" height="438"/><rect class="jan" x="980" y="376" width="40" height="3" style="animation-delay:-2.1s"/><rect class="jan" x="980" y="402" width="40" height="3" style="animation-delay:-3.7s"/><rect class="jan" x="980" y="428" width="40" height="3" style="animation-delay:-3.1s"/><rect class="jan" x="980" y="454" width="40" height="3" style="animation-delay:-2.1s"/><rect class="jan" x="980" y="506" width="40" height="3" style="animation-delay:-5.8s"/><rect class="jan" x="980" y="532" width="40" height="3" style="animation-delay:-3.3s"/><rect class="jan" x="980" y="610" width="40" height="3" style="animation-delay:-2.1s"/><rect class="jan" x="980" y="636" width="40" height="3" style="animation-delay:-4.8s"/><rect class="jan" x="980" y="662" width="40" height="3" style="animation-delay:-0.6s"/><rect class="jan" x="980" y="688" width="40" height="3" style="animation-delay:-4.2s"/><rect class="jan" x="980" y="714" width="40" height="3" style="animation-delay:-4.4s"/><rect class="jan" x="980" y="740" width="40" height="3" style="animation-delay:-3.5s"/><rect x="1038" y="433" width="56" height="367"/><rect class="jan" x="1046" y="473" width="40" height="3" style="animation-delay:-5.6s"/><rect class="jan" x="1046" y="499" width="40" height="3" style="animation-delay:-3.7s"/><rect class="jan" x="1046" y="525" width="40" height="3" style="animation-delay:-1.3s"/><rect class="jan" x="1046" y="551" width="40" height="3" style="animation-delay:-4.4s"/><rect class="jan" x="1046" y="577" width="40" height="3" style="animation-delay:-5.5s"/><rect class="jan" x="1046" y="603" width="40" height="3" style="animation-delay:-1.0s"/><rect class="jan" x="1046" y="629" width="40" height="3" style="animation-delay:-1.7s"/><rect class="jan" x="1046" y="655" width="40" height="3" style="animation-delay:-2.6s"/><rect x="1104" y="553" width="44" height="247"/><rect class="jan" x="1112" y="567" width="28" height="3" style="animation-delay:-0.9s"/><rect class="jan" x="1112" y="619" width="28" height="3" style="animation-delay:-5.0s"/><rect class="jan" x="1112" y="645" width="28" height="3" style="animation-delay:-1.7s"/><rect class="jan" x="1112" y="671" width="28" height="3" style="animation-delay:-3.2s"/><rect class="jan" x="1112" y="723" width="28" height="3" style="animation-delay:-0.8s"/><rect x="1164" y="397" width="34" height="403"/><rect class="jan" x="1172" y="515" width="18" height="3" style="animation-delay:-2.4s"/><rect class="jan" x="1172" y="541" width="18" height="3" style="animation-delay:-3.8s"/><rect class="jan" x="1172" y="567" width="18" height="3" style="animation-delay:-0.4s"/><rect class="jan" x="1172" y="593" width="18" height="3" style="animation-delay:-1.0s"/><rect class="jan" x="1172" y="619" width="18" height="3" style="animation-delay:-0.3s"/><rect class="jan" x="1172" y="645" width="18" height="3" style="animation-delay:-0.9s"/><rect class="jan" x="1172" y="671" width="18" height="3" style="animation-delay:-2.2s"/><rect class="jan" x="1172" y="697" width="18" height="3" style="animation-delay:-5.2s"/><rect class="jan" x="1172" y="749" width="18" height="3" style="animation-delay:-1.5s"/><rect class="jan" x="1172" y="775" width="18" height="3" style="animation-delay:-2.2s"/><rect x="1204" y="381" width="34" height="419"/><rect class="jan" x="1212" y="421" width="18" height="3" style="animation-delay:-2.9s"/><rect class="jan" x="1212" y="447" width="18" height="3" style="animation-delay:-0.6s"/><rect class="jan" x="1212" y="473" width="18" height="3" style="animation-delay:-1.6s"/><rect class="jan" x="1212" y="525" width="18" height="3" style="animation-delay:-0.1s"/><rect class="jan" x="1212" y="577" width="18" height="3" style="animation-delay:-0.9s"/><rect class="jan" x="1212" y="603" width="18" height="3" style="animation-delay:-0.2s"/><rect class="jan" x="1212" y="629" width="18" height="3" style="animation-delay:-5.9s"/><rect class="jan" x="1212" y="707" width="18" height="3" style="animation-delay:-2.2s"/><rect class="jan" x="1212" y="733" width="18" height="3" style="animation-delay:-4.6s"/><rect class="jan" x="1212" y="759" width="18" height="3" style="animation-delay:-4.7s"/><rect x="1248" y="531" width="44" height="269"/><rect class="jan" x="1256" y="623" width="28" height="3" style="animation-delay:-3.1s"/><rect class="jan" x="1256" y="649" width="28" height="3" style="animation-delay:-0.2s"/><rect class="jan" x="1256" y="675" width="28" height="3" style="animation-delay:-1.7s"/><rect class="jan" x="1256" y="701" width="28" height="3" style="animation-delay:-4.2s"/><rect class="jan" x="1256" y="753" width="28" height="3" style="animation-delay:-5.6s"/><rect x="1302" y="518" width="34" height="282"/><rect class="jan" x="1310" y="532" width="18" height="3" style="animation-delay:-2.8s"/><rect class="jan" x="1310" y="558" width="18" height="3" style="animation-delay:-2.9s"/><rect class="jan" x="1310" y="636" width="18" height="3" style="animation-delay:-5.5s"/><rect class="jan" x="1310" y="662" width="18" height="3" style="animation-delay:-3.9s"/><rect class="jan" x="1310" y="714" width="18" height="3" style="animation-delay:-2.3s"/><rect class="jan" x="1310" y="766" width="18" height="3" style="animation-delay:-5.3s"/><rect x="1346" y="586" width="56" height="214"/><rect class="jan" x="1354" y="652" width="40" height="3" style="animation-delay:-2.4s"/><rect class="jan" x="1354" y="730" width="40" height="3" style="animation-delay:-0.8s"/><rect class="jan" x="1354" y="756" width="40" height="3" style="animation-delay:-5.4s"/><rect x="1418" y="388" width="44" height="412"/><rect class="jan" x="1426" y="428" width="28" height="3" style="animation-delay:-3.3s"/><rect class="jan" x="1426" y="454" width="28" height="3" style="animation-delay:-0.1s"/><rect class="jan" x="1426" y="532" width="28" height="3" style="animation-delay:-5.6s"/><rect class="jan" x="1426" y="558" width="28" height="3" style="animation-delay:-5.2s"/><rect class="jan" x="1426" y="610" width="28" height="3" style="animation-delay:-1.5s"/><rect class="jan" x="1426" y="636" width="28" height="3" style="animation-delay:-1.4s"/><rect class="jan" x="1426" y="688" width="28" height="3" style="animation-delay:-2.5s"/><rect class="jan" x="1426" y="714" width="28" height="3" style="animation-delay:-5.5s"/><rect class="jan" x="1426" y="740" width="28" height="3" style="animation-delay:-2.7s"/></g>
+    <g><circle class="part" cx="237" cy="693" r="1.5" style="animation-delay:-3.0s;animation-duration:13s"/><circle class="part" cx="106" cy="220" r="2.5" style="animation-delay:-5.4s;animation-duration:9s"/><circle class="part" cx="149" cy="573" r="2" style="animation-delay:-7.4s;animation-duration:12s"/><circle class="part" cx="587" cy="583" r="2.5" style="animation-delay:-6.4s;animation-duration:16s"/><circle class="part" cx="1059" cy="373" r="2.5" style="animation-delay:-6.3s;animation-duration:13s"/><circle class="part" cx="1165" cy="327" r="2" style="animation-delay:-1.6s;animation-duration:10s"/><circle class="part" cx="823" cy="572" r="2" style="animation-delay:-0.9s;animation-duration:12s"/><circle class="part" cx="897" cy="194" r="1.5" style="animation-delay:-8.0s;animation-duration:10s"/><circle class="part" cx="336" cy="778" r="2.5" style="animation-delay:-4.4s;animation-duration:13s"/><circle class="part" cx="301" cy="598" r="1.5" style="animation-delay:-9.0s;animation-duration:10s"/><circle class="part" cx="835" cy="618" r="1.5" style="animation-delay:-11.9s;animation-duration:12s"/><circle class="part" cx="350" cy="561" r="2.5" style="animation-delay:-4.8s;animation-duration:15s"/><circle class="part" cx="420" cy="485" r="2" style="animation-delay:-1.1s;animation-duration:14s"/><circle class="part" cx="59" cy="466" r="2.5" style="animation-delay:-5.5s;animation-duration:9s"/><circle class="part" cx="807" cy="459" r="2.5" style="animation-delay:-7.5s;animation-duration:10s"/><circle class="part" cx="251" cy="354" r="1.5" style="animation-delay:-1.0s;animation-duration:13s"/><circle class="part" cx="101" cy="305" r="2" style="animation-delay:-9.1s;animation-duration:15s"/><circle class="part" cx="1404" cy="384" r="2" style="animation-delay:-1.8s;animation-duration:16s"/><circle class="part" cx="689" cy="211" r="2" style="animation-delay:-0.7s;animation-duration:11s"/><circle class="part" cx="891" cy="194" r="2" style="animation-delay:-11.3s;animation-duration:10s"/><circle class="part" cx="553" cy="205" r="2.5" style="animation-delay:-10.3s;animation-duration:10s"/><circle class="part" cx="561" cy="244" r="2" style="animation-delay:-0.1s;animation-duration:15s"/><circle class="part" cx="568" cy="756" r="1.5" style="animation-delay:-0.5s;animation-duration:12s"/><circle class="part" cx="244" cy="285" r="2" style="animation-delay:-0.6s;animation-duration:12s"/><circle class="part" cx="658" cy="763" r="2" style="animation-delay:-6.4s;animation-duration:12s"/><circle class="part" cx="613" cy="576" r="2.5" style="animation-delay:-8.1s;animation-duration:13s"/><circle class="part" cx="730" cy="138" r="2" style="animation-delay:-0.4s;animation-duration:9s"/><circle class="part" cx="1055" cy="684" r="1.5" style="animation-delay:-6.2s;animation-duration:12s"/><circle class="part" cx="935" cy="228" r="2.5" style="animation-delay:-9.8s;animation-duration:15s"/><circle class="part" cx="1364" cy="626" r="2.5" style="animation-delay:-10.0s;animation-duration:15s"/><circle class="part" cx="1057" cy="435" r="2.5" style="animation-delay:-2.6s;animation-duration:12s"/><circle class="part" cx="721" cy="323" r="2.5" style="animation-delay:-8.7s;animation-duration:11s"/><circle class="part" cx="848" cy="475" r="1.5" style="animation-delay:-10.0s;animation-duration:9s"/><circle class="part" cx="164" cy="760" r="2.5" style="animation-delay:-10.6s;animation-duration:15s"/></g>
+    <g><rect class="barra" x="960" y="688" width="22" height="82" rx="3" style="animation-delay:0.00s"/><rect class="barra" x="996" y="658" width="22" height="112" rx="3" style="animation-delay:0.09s"/><rect class="barra" x="1032" y="632" width="22" height="138" rx="3" style="animation-delay:0.18s"/><rect class="barra" x="1068" y="609" width="22" height="161" rx="3" style="animation-delay:0.27s"/><rect class="barra" x="1104" y="617" width="22" height="153" rx="3" style="animation-delay:0.36s"/><rect class="barra" x="1140" y="583" width="22" height="187" rx="3" style="animation-delay:0.45s"/><rect class="barra" x="1176" y="570" width="22" height="200" rx="3" style="animation-delay:0.54s"/><rect class="barra" x="1212" y="537" width="22" height="233" rx="3" style="animation-delay:0.63s"/><rect class="barra" x="1248" y="513" width="22" height="257" rx="3" style="animation-delay:0.72s"/><rect class="barra" x="1284" y="491" width="22" height="279" rx="3" style="animation-delay:0.81s"/><rect class="barra" x="1320" y="471" width="22" height="299" rx="3" style="animation-delay:0.90s"/><rect class="barra" x="1356" y="417" width="22" height="353" rx="3" style="animation-delay:0.99s"/><rect class="barra" x="1392" y="391" width="22" height="379" rx="3" style="animation-delay:1.08s"/></g>
+    <path class="linha" pathLength="1" d="M971 616 L1007 608 L1043 582 L1079 547 L1115 557 L1151 518 L1187 500 L1223 486 L1259 452 L1295 428 L1331 415 L1367 355 L1403 330"/>
+    <g><circle class="ponto" cx="971" cy="616" r="5" style="animation-delay:1.20s"/><circle class="ponto" cx="1007" cy="608" r="5" style="animation-delay:1.32s"/><circle class="ponto" cx="1043" cy="582" r="5" style="animation-delay:1.44s"/><circle class="ponto" cx="1079" cy="547" r="5" style="animation-delay:1.56s"/><circle class="ponto" cx="1115" cy="557" r="5" style="animation-delay:1.68s"/><circle class="ponto" cx="1151" cy="518" r="5" style="animation-delay:1.80s"/><circle class="ponto" cx="1187" cy="500" r="5" style="animation-delay:1.92s"/><circle class="ponto" cx="1223" cy="486" r="5" style="animation-delay:2.04s"/><circle class="ponto" cx="1259" cy="452" r="5" style="animation-delay:2.16s"/><circle class="ponto" cx="1295" cy="428" r="5" style="animation-delay:2.28s"/><circle class="ponto" cx="1331" cy="415" r="5" style="animation-delay:2.40s"/><circle class="ponto" cx="1367" cy="355" r="5" style="animation-delay:2.52s"/><circle class="ponto" cx="1403" cy="330" r="5" style="animation-delay:2.64s"/></g>
+  </svg>
+  <div class="gf-brilho" aria-hidden="true"></div>
+  <div class="gf-foco" aria-hidden="true"></div>
+
+
+  <div class="gf-texto">
+    <span class="gf-selo gf-entra" style="--i:0">100% gratuito · direto no navegador</span>
+    <h1 class="gf-entra" style="--i:1">Não é só para gerir o seu negócio. É para organizar
+      <span class="gf-troca" id="gf-troca" aria-hidden="true" title="Clique para abrir a ferramenta"></span>
+      <span class="gf-so-leitor">a sua vida.</span>
+    </h1>
+    <p class="gf-sub gf-entra" style="--i:2">No trabalho, em casa e no seu dia a dia — ferramentas simples que cabem na sua rotina, direto no navegador, sem precisar instalar nada.</p>
+    <div class="gf-acoes gf-entra" style="--i:3">
+      <a class="gf-botao gf-amarelo gf-ima" id="gf-abrir" href="#ferramentas"><span id="gf-abrir-texto">Conhecer as ferramentas</span> <span aria-hidden="true">→</span></a>
     </div>
-    <a class="cta-small" href="#ferramentas">Ver ferramentas</a>
-  </nav>
+  </div>
 
-  <header class="hero">
-    <span class="eyebrow">100% gratuito · direto no navegador</span>
-    <h1>Não é só para gerir o seu negócio. É para organizar a sua vida.</h1>
-    <p>No trabalho, em casa e no seu dia a dia — ferramentas simples que cabem na sua rotina, direto no navegador, sem precisar instalar nada.</p>
-    <div class="cta-row">
-      <a class="btn-gold" href="#ferramentas">Ver ferramentas →</a>
-      <a class="btn-ghost-light" href="./painel-financeiro/">Abrir Painel Financeiro</a>
+  <div class="gf-faixas gf-entra" style="--i:4" id="ferramentas" aria-label="Ferramentas">
+    <div class="gf-faixa" id="gf-faixa-1"></div>
+    <div class="gf-faixa gf-volta" id="gf-faixa-2"></div>
+  </div>
+</section>
+
+<!-- ============ CARTÃO DE NÚMEROS ============ -->
+<ul class="gf-numeros" id="gf-numeros">
+  <li><span class="gf-numero" data-ate="7">7</span><span class="gf-legenda">ferramentas disponíveis</span></li>
+  <li><span class="gf-numero" data-ate="100" data-sufixo="%">100%</span><span class="gf-legenda">gratuito</span></li>
+  <li><span class="gf-numero">Zero</span><span class="gf-legenda">cadastro ou instalação</span></li>
+  <li><span class="gf-numero">Privado</span><span class="gf-legenda">seus dados ficam no seu navegador</span></li>
+</ul>
+
+<!-- ============ RODAPÉ ============ -->
+<footer class="gf-rodape">
+  <svg class="gf-rodape-cena" viewBox="0 0 1440 420" preserveAspectRatio="xMaxYMax slice" aria-hidden="true">
+    <defs><linearGradient id="gf-grad-barra-2" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5cc8ff" stop-opacity=".75"/><stop offset="1" stop-color="#1668d8" stop-opacity=".12"/></linearGradient></defs>
+    <circle class="arco" cx="150" cy="330" r="250"/><circle class="arco" cx="150" cy="330" r="330" stroke-dasharray="3 12"/>
+    <g opacity=".55"><rect class="barra" x="1060" y="385" width="20" height="35" rx="3" style="animation-delay:0.00s"/><rect class="barra" x="1093" y="367" width="20" height="53" rx="3" style="animation-delay:0.09s"/><rect class="barra" x="1126" y="332" width="20" height="88" rx="3" style="animation-delay:0.18s"/><rect class="barra" x="1159" y="308" width="20" height="112" rx="3" style="animation-delay:0.27s"/><rect class="barra" x="1192" y="284" width="20" height="136" rx="3" style="animation-delay:0.36s"/><rect class="barra" x="1225" y="284" width="20" height="136" rx="3" style="animation-delay:0.45s"/><rect class="barra" x="1258" y="259" width="20" height="161" rx="3" style="animation-delay:0.54s"/><rect class="barra" x="1291" y="235" width="20" height="185" rx="3" style="animation-delay:0.63s"/><rect class="barra" x="1324" y="222" width="20" height="198" rx="3" style="animation-delay:0.72s"/><rect class="barra" x="1357" y="190" width="20" height="230" rx="3" style="animation-delay:0.81s"/><rect class="barra" x="1390" y="163" width="20" height="257" rx="3" style="animation-delay:0.90s"/></g>
+    <path class="linha" pathLength="1" opacity=".7" d="M1070 350 L1103 321 L1136 289 L1169 267 L1202 241 L1235 236 L1268 220 L1301 187 L1334 180 L1367 146 L1400 119"/>
+  </svg>
+  <div class="gf-autora">
+    <ul class="gf-micro"><li>Transformando</li><li>dados em</li><li>oportunidades</li><li>financeiras</li></ul>
+    <div class="gf-apresenta">
+      <p class="gf-l1">Análise de Dados <span aria-hidden="true">|</span></p>
+      <p class="gf-l2">Business Intelligence</p>
+      <p class="gf-l3">Finanças e Controladoria</p>
+      <p class="gf-l4">Power BI • SQL • DAX • Power Query</p>
+      <p class="gf-l5">Dados que apoiam decisões de negócio</p>
     </div>
-    <div class="trust">
-      <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Sem cadastro</span>
-      <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Seus dados ficam no seu navegador</span>
-      <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Uso gratuito</span>
+    <div class="gf-coluna-direita">
+      <ul class="gf-micro gf-direita"><li>Insights</li><li>Planejamento</li><li>Gestão financeira</li><li>Crescimento</li></ul>
+      <ul class="gf-micro gf-direita gf-baixo"><li>Mais dados</li><li>Melhores decisões</li><li>Mais valor</li></ul>
     </div>
-  </header>
-
-  <section class="tools" id="ferramentas">
-    <div class="head">
-      <div class="kicker">Nossas ferramentas</div>
-      <h2>Escolha o que você precisa hoje</h2>
-      <p>Ferramentas simples que resolvem tarefas do dia a dia — sem planilhas complicadas.</p>
+  </div>
+  <div class="gf-assina">
+    <div>
+      <p>Desenvolvido por <b>Andreia Brandborg</b> · <a class="gf-link" href="mailto:andreiabrandborg@gmail.com">andreiabrandborg@gmail.com</a></p>
+      <p class="gf-nota">Projeto de portfólio, desenvolvido para fins de demonstração.</p>
     </div>
+    <a class="gf-linkedin" href="https://www.linkedin.com/in/andreiabrandborg" target="_blank" rel="noopener"><i aria-hidden="true">in</i>linkedin.com/in/andreiabrandborg</a>
+  </div>
+</footer>
 
-    <div class="grid">
-      <a class="card" href="./painel-financeiro/">
-        <div class="icon" aria-hidden="true">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V10M12 20V4M20 20v-7"/></svg>
-        </div>
-        <h3>Painel Financeiro</h3>
-        <p>Importe planilhas de recebimentos e pagamentos e veja indicadores, gráficos e comparações geradas automaticamente.</p>
-        <div class="cta">Abrir painel →</div>
-      </a>
+<script>
+(function () {
+  // Ferramentas do site. "curto" é o nome usado no botão.
+  var FERRAMENTAS = [
+    { nome: 'Painel Financeiro', curto: 'Painel Financeiro', link: './painel-financeiro/', cor: '#3b6cf6' },
+    { nome: 'Ponto Certo', curto: 'Ponto Certo', link: './ponto-certo/', cor: '#f2a705' },
+    { nome: 'Orçamento em Dia', curto: 'Orçamento em Dia', link: './orcamento-em-dia/', cor: '#14b88a' },
+    { nome: 'Fluxo de Caixa em Tempo Real', curto: 'Fluxo de Caixa', link: './fluxo-caixa/', cor: '#7a5cf0' },
+    { nome: 'Leitor de Nota Fiscal (XML)', curto: 'Leitor de Nota Fiscal', link: './leitor-xml/', cor: '#ef6a52' },
+    { nome: 'Buscador de NCM', curto: 'Buscador de NCM', link: './buscador-ncm/', cor: '#1aa3d9' },
+    { nome: 'Gestão de Estoque', curto: 'Gestão de Estoque', link: './gestao-estoque/', cor: '#d9488b' }
+  ];
+  // Palavras vivas: cada frase do título aponta para uma ferramenta (pelo número dela na lista acima, a partir de 0).
+  // "null" significa que a frase não abre nenhuma ferramenta específica.
+  var FRASES = [
+    { texto: 'a sua vida.', ferramenta: null },
+    { texto: 'as suas finanças.', ferramenta: 0 },
+    { texto: 'o seu caixa.', ferramenta: 3 },
+    { texto: 'o seu orçamento.', ferramenta: 2 },
+    { texto: 'as suas horas.', ferramenta: 1 },
+    { texto: 'o seu estoque.', ferramenta: 6 },
+    { texto: 'as suas notas.', ferramenta: 4 },
+    { texto: 'os seus produtos.', ferramenta: 5 }
+  ];
+  var TEMPO_DA_FRASE = 2600; // milissegundos
+  var calmo = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var capa = document.getElementById('inicio');
+  if (!capa) return;
 
-      <a class="card" href="./ponto-certo/">
-        <div class="icon" aria-hidden="true">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
-        </div>
-        <h3>Ponto Certo</h3>
-        <p>Calcule horas trabalhadas, horas extras e o saldo do banco de horas — e simule quanto valem em reais.</p>
-        <div class="cta">Abrir calculadora →</div>
-      </a>
+  // Faixas de ferramentas em movimento
+  var chips = [];
+  function encher(id, ordem) {
+    var el = document.getElementById(id);
+    [0, 1].forEach(function (copia) {
+      ordem.forEach(function (n) {
+        var f = FERRAMENTAS[n], a = document.createElement('a');
+        a.href = f.link; a.textContent = f.nome; a.style.setProperty('--gf-cor', f.cor); a.dataset.n = n;
+        if (copia) { a.setAttribute('aria-hidden', 'true'); a.tabIndex = -1; }
+        el.appendChild(a); chips.push(a);
+      });
+    });
+  }
+  encher('gf-faixa-1', [0, 1, 2, 3, 4, 5, 6]);
+  encher('gf-faixa-2', [3, 4, 5, 6, 0, 1, 2]);
 
-      <a class="card" href="./orcamento-em-dia/">
-        <div class="icon" aria-hidden="true">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="14" rx="2"/><path d="M2 10h20M6 15h4"/></svg>
-        </div>
-        <h3>Orçamento em Dia</h3>
-        <p>Organize seus gastos, defina metas e acompanhe seu orçamento mensal de forma simples — no trabalho ou em casa.</p>
-        <div class="cta">Abrir orçamento →</div>
-      </a>
+  // Título que troca, ligado ao botão e às faixas
+  var troca = document.getElementById('gf-troca'), botao = document.getElementById('gf-abrir'), rotulo = document.getElementById('gf-abrir-texto');
+  var atual = 0, pausado = false;
+  var spans = FRASES.map(function (f, n) { var s = document.createElement('span'); s.textContent = f.texto; if (!n) s.className = 'gf-atual'; troca.appendChild(s); return s; });
+  function mostrar(n) {
+    if (n !== atual) {
+      spans.forEach(function (s) { s.classList.remove('gf-saiu'); });
+      spans[atual].classList.remove('gf-atual'); spans[atual].classList.add('gf-saiu');
+      spans[n].classList.add('gf-atual'); atual = n;
+    }
+    var f = FRASES[n].ferramenta === null ? null : FERRAMENTAS[FRASES[n].ferramenta];
+    var texto = f ? 'Abrir ' + f.curto : 'Conhecer as ferramentas';
+    botao.setAttribute('href', f ? f.link : '#ferramentas');
+    troca.classList.toggle('gf-clicavel', !!f);
+    chips.forEach(function (c) { c.classList.toggle('gf-ativa', !!f && +c.dataset.n === FRASES[n].ferramenta); });
+    if (rotulo.textContent === texto) return;
+    if (calmo) { rotulo.textContent = texto; return; }
+    rotulo.classList.add('gf-some');
+    setTimeout(function () { rotulo.textContent = texto; rotulo.classList.remove('gf-some'); }, 180);
+  }
+  mostrar(0);
+  if (!calmo) setInterval(function () { if (!pausado && !document.hidden) mostrar((atual + 1) % FRASES.length); }, TEMPO_DA_FRASE);
+  troca.addEventListener('click', function () { var f = FRASES[atual].ferramenta; if (f !== null) window.location.href = FERRAMENTAS[f].link; });
+  // a troca pausa enquanto o mouse está sobre o título ou o botão, para dar tempo de clicar
+  [troca, botao].forEach(function (el) {
+    el.addEventListener('pointerenter', function () { pausado = true; });
+    el.addEventListener('pointerleave', function () { pausado = false; });
+    el.addEventListener('focus', function () { pausado = true; });
+    el.addEventListener('blur', function () { pausado = false; });
+  });
+  // passar o mouse numa ferramenta das faixas traz a palavra dela para o título
+  chips.forEach(function (c) {
+    function ligar() { pausado = true; var n = +c.dataset.n; FRASES.some(function (f, k) { if (f.ferramenta === n) { mostrar(k); return true; } }); }
+    c.addEventListener('pointerenter', ligar); c.addEventListener('focus', ligar);
+    c.addEventListener('pointerleave', function () { pausado = false; }); c.addEventListener('blur', function () { pausado = false; });
+  });
 
-      <a class="card" href="./buscador-ncm/">
-        <div class="icon" aria-hidden="true">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.35-4.35"/></svg>
-        </div>
-        <h3>Buscador de NCM</h3>
-        <p>Encontre o código NCM de um produto pela descrição, ou consulte a descrição a partir do código — tabela oficial da Receita Federal.</p>
-        <div class="cta">Abrir buscador →</div>
-      </a>
+  // Menu "Ferramentas" do cabeçalho: fecha ao clicar fora ou apertar Esc
+  var menu = document.getElementById('gf-menu');
+  if (menu) {
+    document.addEventListener('click', function (e) { if (menu.open && !menu.contains(e.target)) menu.open = false; });
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape') menu.open = false; });
+  }
 
-      <a class="card" href="./leitor-xml/">
-        <div class="icon" aria-hidden="true">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>
-        </div>
-        <h3>Leitor de Nota Fiscal (XML)</h3>
-        <p>Cole ou importe o XML de uma NF-e ou NFS-e e gere um PDF legível da nota, direto no navegador.</p>
-        <div class="cta">Abrir leitor →</div>
-      </a>
+  // Profundidade: o cenário se desloca conforme o mouse
+  var cena = capa.querySelector('.gf-cena');
+  capa.addEventListener('pointermove', function (e) {
+    var r = capa.getBoundingClientRect();
+    var x = (e.clientX - r.left) / r.width - .5, y = (e.clientY - r.top) / r.height - .5;
+    capa.style.setProperty('--gf-mx', (e.clientX - r.left) + 'px');
+    capa.style.setProperty('--gf-my', (e.clientY - r.top) + 'px');
+    if (calmo || window.innerWidth <= 900) return;
+    cena.style.setProperty('--gf-px', (x * -26).toFixed(1) + 'px');
+    cena.style.setProperty('--gf-py', (y * -16).toFixed(1) + 'px');
+  });
 
-      <a class="card" href="./fluxo-caixa/">
-        <div class="icon" aria-hidden="true">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12V7a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-1"/><path d="M18 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4z"/></svg>
-        </div>
-        <h3>Fluxo de Caixa em Tempo Real</h3>
-        <p>Lance entradas e saídas na hora e acompanhe o saldo do caixa mudar instantaneamente, sem esperar o fim do mês.</p>
-        <div class="cta">Abrir caixa →</div>
-      </a>
+  // Cartão de números: aparece e conta até o valor quando entra na tela
+  var numeros = document.getElementById('gf-numeros');
+  function contar() {
+    Array.prototype.forEach.call(numeros.querySelectorAll('[data-ate]'), function (el) {
+      var ate = +el.dataset.ate, sufixo = el.dataset.sufixo || '', t0 = null;
+      requestAnimationFrame(function passo(t) {
+        if (t0 === null) t0 = t;
+        var p = Math.min((t - t0) / 1300, 1);
+        el.textContent = Math.round(ate * (1 - Math.pow(1 - p, 3))) + sufixo;
+        if (p < 1) requestAnimationFrame(passo);
+      });
+    });
+  }
+  if (numeros) {
+    if (calmo || !('IntersectionObserver' in window)) numeros.classList.add('gf-visivel');
+    else {
+      Array.prototype.forEach.call(numeros.querySelectorAll('[data-ate]'), function (el) { el.textContent = '0' + (el.dataset.sufixo || ''); });
+      var obs = new IntersectionObserver(function (itens) {
+        if (itens[0].isIntersecting) { numeros.classList.add('gf-visivel'); contar(); obs.disconnect(); }
+      }, { threshold: .5 });
+      obs.observe(numeros);
+    }
+  }
 
-      <a class="card" href="./gestao-estoque/">
-        <div class="icon" aria-hidden="true">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 8 12 3 3 8l9 5 9-5Z"/><path d="M3 8v8l9 5 9-5V8"/><path d="M12 13v8"/></svg>
-        </div>
-        <h3>Gestão de Estoque</h3>
-        <p>Cadastre produtos, registre entradas e saídas e receba um alerta assim que o estoque ficar baixo.</p>
-        <div class="cta">Abrir estoque →</div>
-      </a>
-    </div>
-  </section>
-
-  <footer>
-    Desenvolvido por Andreia Brandborg · <a href="mailto:andreiabrandborg@gmail.com">andreiabrandborg@gmail.com</a><br>
-    <span style="opacity:0.7; font-size:12px;">Projeto de portfólio, desenvolvido para fins de demonstração.</span>
-  </footer>
+  // Botões "ímã": aproximam-se do cursor
+  Array.prototype.forEach.call(capa.querySelectorAll('.gf-ima'), function (b) {
+    b.addEventListener('pointermove', function (e) {
+      if (calmo) return;
+      var r = b.getBoundingClientRect();
+      b.style.transform = 'translate(' + ((e.clientX - r.left - r.width / 2) * .25).toFixed(1) + 'px,' + ((e.clientY - r.top - r.height / 2) * .35).toFixed(1) + 'px)';
+    });
+    b.addEventListener('pointerleave', function () { b.style.transform = ''; });
+  });
+})();
+</script>
 
 </body>
 </html>
