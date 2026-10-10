@@ -10,17 +10,17 @@
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root {
-    --ink: #241533; --ink-soft: #6b5a80; --paper: #f7f3fc; --paper-raised: #ffffff;
-    --border: #e6dcf5; --navy: #241533; --navy-deep: #150c1f; --accent: #7c3aed;
-    --accent-soft: #ede4fd; --gold: #f2b705; --gold-ink: #4a3600;
+    --ink: #0f1c3d; --ink-soft: #56628a; --paper: #f5f7fd; --paper-raised: #ffffff;
+    --border: #e2e6f5; --navy: #0d1730; --navy-deep: #081026; --accent: #2f5fe0;
+    --accent-soft: #e8edfc; --gold: #f2b705; --gold-ink: #4a3600;
     --good: #0f9d6b; --good-soft: #dff5ea; --bad: #d64545; --bad-soft: #fbe4e2;
     --warn: #c47a10; --warn-soft: #fbecd4;
-    --shadow-card: 0 18px 40px -18px rgba(36,21,51,0.26);
+    --shadow-card: 0 18px 40px -18px rgba(15,28,61,0.28);
   }
   @media (prefers-color-scheme: dark) {
     :root:not([data-theme="light"]) {
-      --ink: #efe7fa; --ink-soft: #b0a0c8; --paper: #140c1c; --paper-raised: #1e1329;
-      --border: #362447; --accent: #a884f5; --accent-soft: #2a1c3c;
+      --ink: #e7eaf0; --ink-soft: #98a3c2; --paper: #0b0e1a; --paper-raised: #131a2c;
+      --border: #232c47; --accent: #7c9bff; --accent-soft: #1c2740;
       --good: #34d399; --good-soft: #123024; --bad: #f27a72; --bad-soft: #3a201e;
       --warn: #e0ab5c; --warn-soft: #362a17;
       --shadow-card: 0 18px 40px -18px rgba(0,0,0,0.55);
@@ -33,19 +33,20 @@
 
   nav.top { display: flex; align-items: center; justify-content: space-between; max-width: 1000px; margin: 0 auto; padding: 20px 24px; }
   nav.top .brand { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 17px; letter-spacing: -0.01em; text-decoration: none; }
-  nav.top .brand .mark { width: 30px; height: 30px; border-radius: 9px; background: linear-gradient(135deg, var(--accent), #4c1d95); flex: none; }
-  nav.top .back { font-size: 13.5px; font-weight: 700; color: var(--accent-soft); background: var(--navy); padding: 9px 16px; border-radius: 8px; text-decoration: none; }
+  nav.top .brand .mark { width: 30px; height: 30px; border-radius: 9px; background: linear-gradient(135deg, var(--accent), #6ea0ff); flex: none; }
+  nav.top .back { font-size: 13.5px; font-weight: 700; color: var(--gold-ink); background: var(--gold); padding: 9px 16px; border-radius: 8px; text-decoration: none; box-shadow: 0 4px 14px -4px rgba(242,183,5,0.5); }
 
   header.hero {
     background: linear-gradient(135deg, var(--navy-deep), var(--navy) 60%);
     border-radius: 0 0 26px 26px; max-width: 1000px; margin: 0 auto; padding: 40px 28px 32px; text-align: center;
   }
   header.hero .eyebrow {
-    display: inline-block; color: #dccdfa; font-size: 12.5px; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase;
+    display: inline-block; color: #cfe0ff; font-size: 12.5px; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase;
     background: rgba(255,255,255,0.10); border: 1px solid rgba(255,255,255,0.18); padding: 6px 14px; border-radius: 999px; margin-bottom: 16px;
   }
   header.hero h1 { color: #fff; font-size: 30px; margin: 0 0 10px; letter-spacing: -0.02em; }
-  header.hero p { color: #dccdf2; font-size: 14.5px; line-height: 1.55; max-width: 580px; margin: 0 auto; }
+  header.hero h1::after { content: ""; display: block; width: 56px; height: 4px; border-radius: 4px; background: var(--gold); margin: 12px auto 0; }
+  header.hero p { color: #d7e0fa; font-size: 14.5px; line-height: 1.55; max-width: 580px; margin: 0 auto; }
 
   main { max-width: 1020px; margin: 0 auto; padding: 26px 20px 70px; }
 
@@ -76,7 +77,7 @@
   .field input:focus, .field select:focus { outline: none; border-color: var(--accent); }
 
   .btn { font: 700 13.5px 'Inter', sans-serif; padding: 11px 18px; border-radius: 10px; border: none; cursor: pointer; }
-  .btn-primary { background: var(--accent); color: #fff; }
+  .btn-primary { background: var(--gold); color: var(--gold-ink); box-shadow: 0 6px 16px -6px rgba(242,183,5,0.55); }
   .btn-outline { background: var(--paper); color: var(--ink-soft); border: 1.5px solid var(--border); }
 
   table.produtos { width: 100%; border-collapse: collapse; font-size: 13px; }
