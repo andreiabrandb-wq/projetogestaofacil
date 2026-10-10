@@ -17,26 +17,26 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.2/jspdf.umd.min.js"></script>
 <style>
   :root {
-    --ink: #16233d;
-    --ink-soft: #5b6b85;
+    --ink: #0f1c3d;
+    --ink-soft: #56628a;
     --paper-raised: #ffffff;
     --border: #e1e4ea;
     --accent: #2f5fe0;
-    --accent-bright: #5eead4;
+    --accent-bright: #5cc8ff;
     --accent-soft: #e8edfc;
     --amber: #b5813a;
     --danger: #c0392b;
     --on-bg: #f4f7ff;
     --on-bg-soft: #b9c8f0;
-    --bg-start: #0b0c1c;
-    --bg-mid: #12132a;
-    --glow-1: rgba(139,92,246,0.40);
-    --glow-2: rgba(236,72,153,0.32);
+    --bg-start: #0b1228;
+    --bg-mid: #0f2350;
+    --glow-1: rgba(47,95,224,0.46);
+    --glow-2: rgba(41,182,255,0.24);
     --glow-3: rgba(34,211,238,0.14);
     --radius-s: 6px;
     --radius-m: 10px;
     --shadow-card: 0 10px 30px -12px rgba(6,14,40,0.35);
-    --bg-decor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 640 480' fill='none' opacity='0.16'%3E%3Cline x1='40' y1='400' x2='600' y2='400' stroke='%23ffffff' stroke-width='1.2'/%3E%3Cline x1='40' y1='60' x2='40' y2='400' stroke='%23ffffff' stroke-width='1.2'/%3E%3Crect x='80' y='300' width='36' height='100' stroke='%23ffffff' stroke-width='1.2'/%3E%3Crect x='140' y='260' width='36' height='140' stroke='%23ffffff' stroke-width='1.2'/%3E%3Crect x='200' y='220' width='36' height='180' stroke='%23ffffff' stroke-width='1.2'/%3E%3Crect x='260' y='180' width='36' height='220' stroke='%23ffffff' stroke-width='1.2'/%3E%3Cpolyline points='340,340 390,300 430,320 470,260 510,230 560,190' stroke='%235eead4' stroke-width='1.8'/%3E%3Ccircle cx='340' cy='340' r='4' stroke='%235eead4' stroke-width='1.4'/%3E%3Ccircle cx='390' cy='300' r='4' stroke='%235eead4' stroke-width='1.4'/%3E%3Ccircle cx='430' cy='320' r='4' stroke='%235eead4' stroke-width='1.4'/%3E%3Ccircle cx='470' cy='260' r='4' stroke='%235eead4' stroke-width='1.4'/%3E%3Ccircle cx='510' cy='230' r='4' stroke='%235eead4' stroke-width='1.4'/%3E%3Ccircle cx='560' cy='190' r='4' stroke='%235eead4' stroke-width='1.4'/%3E%3Ccircle cx='560' cy='100' r='46' stroke='%23ffffff' stroke-width='1.2'/%3E%3Cpath d='M560 54 A46 46 0 0 1 597 130' stroke='%235eead4' stroke-width='3'/%3E%3C/svg%3E");
+    --bg-decor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 640 480' fill='none' opacity='0.16'%3E%3Cline x1='40' y1='400' x2='600' y2='400' stroke='%23ffffff' stroke-width='1.2'/%3E%3Cline x1='40' y1='60' x2='40' y2='400' stroke='%23ffffff' stroke-width='1.2'/%3E%3Crect x='80' y='300' width='36' height='100' stroke='%23ffffff' stroke-width='1.2'/%3E%3Crect x='140' y='260' width='36' height='140' stroke='%23ffffff' stroke-width='1.2'/%3E%3Crect x='200' y='220' width='36' height='180' stroke='%23ffffff' stroke-width='1.2'/%3E%3Crect x='260' y='180' width='36' height='220' stroke='%23ffffff' stroke-width='1.2'/%3E%3Cpolyline points='340,340 390,300 430,320 470,260 510,230 560,190' stroke='%235cc8ff' stroke-width='1.8'/%3E%3Ccircle cx='340' cy='340' r='4' stroke='%235cc8ff' stroke-width='1.4'/%3E%3Ccircle cx='390' cy='300' r='4' stroke='%235cc8ff' stroke-width='1.4'/%3E%3Ccircle cx='430' cy='320' r='4' stroke='%235cc8ff' stroke-width='1.4'/%3E%3Ccircle cx='470' cy='260' r='4' stroke='%235cc8ff' stroke-width='1.4'/%3E%3Ccircle cx='510' cy='230' r='4' stroke='%235cc8ff' stroke-width='1.4'/%3E%3Ccircle cx='560' cy='190' r='4' stroke='%235cc8ff' stroke-width='1.4'/%3E%3Ccircle cx='560' cy='100' r='46' stroke='%23ffffff' stroke-width='1.2'/%3E%3Cpath d='M560 54 A46 46 0 0 1 597 130' stroke='%235cc8ff' stroke-width='3'/%3E%3C/svg%3E");
   }
   @media (prefers-color-scheme: dark) {
     :root:not([data-theme="light"]) {
@@ -45,16 +45,16 @@
       --paper-raised: #151c2b;
       --border: #262f47;
       --accent: #6d8dff;
-      --accent-bright: #5eead4;
+      --accent-bright: #5cc8ff;
       --accent-soft: #1c2740;
       --amber: #d8a568;
       --danger: #e17c68;
       --on-bg: #eef2ff;
       --on-bg-soft: #93a3d1;
-      --bg-start: #07070f;
-      --bg-mid: #0d0e1e;
-      --glow-1: rgba(139,92,246,0.34);
-      --glow-2: rgba(236,72,153,0.26);
+      --bg-start: #070b18;
+      --bg-mid: #0b1530;
+      --glow-1: rgba(47,95,224,0.40);
+      --glow-2: rgba(41,182,255,0.20);
       --glow-3: rgba(34,211,238,0.12);
       --shadow-card: 0 10px 30px -12px rgba(0,0,0,0.5);
     }
@@ -65,16 +65,16 @@
     --paper-raised: #151c2b;
     --border: #262f47;
     --accent: #6d8dff;
-    --accent-bright: #5eead4;
+    --accent-bright: #5cc8ff;
     --accent-soft: #1c2740;
     --amber: #d8a568;
     --danger: #e17c68;
     --on-bg: #eef2ff;
     --on-bg-soft: #93a3d1;
-    --bg-start: #07070f;
-    --bg-mid: #0d0e1e;
-    --glow-1: rgba(139,92,246,0.34);
-    --glow-2: rgba(236,72,153,0.26);
+    --bg-start: #070b18;
+    --bg-mid: #0b1530;
+    --glow-1: rgba(47,95,224,0.40);
+    --glow-2: rgba(41,182,255,0.20);
     --glow-3: rgba(34,211,238,0.12);
     --shadow-card: 0 10px 30px -12px rgba(0,0,0,0.5);
   }
@@ -130,12 +130,12 @@
   button.ghost:focus-visible, a:focus-visible, .dropzone:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 
   button.primary {
-    border: none; background: var(--accent); color: #fff;
-    border-radius: var(--radius-s); padding: 11px 22px; font: inherit; font-size: 14.5px; font-weight: 600;
-    cursor: pointer; box-shadow: 0 4px 14px -4px rgba(47,95,224,0.45);
+    border: none; background: #f2b705; color: #1b1400;
+    border-radius: var(--radius-s); padding: 11px 22px; font: inherit; font-size: 14.5px; font-weight: 700;
+    cursor: pointer; box-shadow: 0 4px 14px -4px rgba(242,183,5,0.5);
     transition: transform .1s ease, box-shadow .15s ease;
   }
-  button.primary:hover { transform: translateY(-1px); box-shadow: 0 6px 18px -4px rgba(47,95,224,0.55); }
+  button.primary:hover { transform: translateY(-1px); box-shadow: 0 6px 18px -4px rgba(242,183,5,0.6); }
   button.primary:disabled { opacity: 0.45; cursor: not-allowed; transform: none; box-shadow: none; }
   button.primary:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
 
@@ -169,7 +169,7 @@
   }
   .file-input-styled::file-selector-button {
     font: inherit; font-size: 12.5px; font-weight: 600; padding: 7px 14px; margin-right: 10px;
-    border: none; border-radius: var(--radius-s); background: var(--accent); color: #fff; cursor: pointer;
+    border: none; border-radius: var(--radius-s); background: #f2b705; color: #1b1400; cursor: pointer;
   }
   .file-input-styled::file-selector-button:hover { opacity: 0.9; }
 
@@ -600,7 +600,7 @@
     toast.style.cssText = 'position:fixed; left:50%; bottom:24px; transform:translateX(-50%); z-index:9999;' +
       'max-width:90vw; padding:12px 18px; border-radius:8px; font:500 13.5px Inter, sans-serif; text-align:center;' +
       'box-shadow:0 8px 24px rgba(0,0,0,0.35); color:#fff;' +
-      (isError ? 'background:#c0392b;' : 'background:#1c2b23; border:1px solid #22b8a0;');
+      (isError ? 'background:#c0392b;' : 'background:#0f2350; border:1px solid #5cc8ff;');
     document.body.appendChild(toast);
     setTimeout(function(){ if (toast.parentNode) toast.remove(); }, 6000);
   }
@@ -1099,7 +1099,7 @@
 
   // ---------- customize panel ----------
   var themePresets = {
-    azul:      { accent: '#2f5fe0', bright: '#5eead4', glow1: 'rgba(139,92,246,0.40)', glow2: 'rgba(236,72,153,0.32)', glow3: 'rgba(34,211,238,0.14)', chart: ['#2f5fe0', '#5eead4', '#60a5fa', '#818cf8', '#38bdf8', '#22d3ee'] },
+    azul:      { accent: '#2f5fe0', bright: '#5cc8ff', glow1: 'rgba(47,95,224,0.46)', glow2: 'rgba(41,182,255,0.24)', glow3: 'rgba(34,211,238,0.14)', chart: ['#2f5fe0', '#5eead4', '#60a5fa', '#818cf8', '#38bdf8', '#22d3ee'] },
     esmeralda: { accent: '#10b981', bright: '#5eead4', glow1: 'rgba(16,185,129,0.36)', glow2: 'rgba(34,211,238,0.26)', glow3: 'rgba(163,230,53,0.12)', chart: ['#10b981', '#2d9cdb', '#f2994a', '#a3e635', '#14b8a6', '#eb5757'] },
     violeta:   { accent: '#8b5cf6', bright: '#f0abfc', glow1: 'rgba(139,92,246,0.42)', glow2: 'rgba(236,72,153,0.34)', glow3: 'rgba(96,165,250,0.14)', chart: ['#8b5cf6', '#ec4899', '#f2994a', '#2d9cdb', '#a3e635', '#eb5757'] },
     grafite:   { accent: '#64748b', bright: '#cbd5e1', glow1: 'rgba(100,116,139,0.32)', glow2: 'rgba(148,163,184,0.24)', glow3: 'rgba(203,213,225,0.10)', chart: ['#64748b', '#2f5fe0', '#f2994a', '#22b8a0', '#9b51e0', '#eb5757'] }
