@@ -168,15 +168,17 @@
   .gf-coluna-direita { display: grid; justify-items: end; }
   .gf-micro.gf-direita { justify-self: end; }
   .gf-micro.gf-baixo { align-self: end; margin-top: 26px; }
-  .gf-apresenta { text-align: left; }
-  .gf-apresenta .gf-l1 { margin: 0; font-family: var(--gf-titulos); font-weight: 600; font-size: clamp(22px, 2.9vw, 38px); line-height: 1.15; letter-spacing: .02em; color: #fff; text-transform: uppercase; }
-  .gf-apresenta .gf-l1 span { color: #8fdcff; font-weight: 400; }
-  .gf-apresenta .gf-l2 { margin: 2px 0 0; font-family: var(--gf-titulos); font-weight: 700; font-size: clamp(24px, 3.3vw, 44px); line-height: 1.12; letter-spacing: .03em; text-transform: uppercase;
-    background: linear-gradient(90deg, #29b6ff, #7fd8ff 45%, #29b6ff 90%); background-size: 200% 100%; -webkit-background-clip: text; background-clip: text; color: transparent; animation: gf-reluzir 6s linear infinite; }
+  .gf-apresenta { grid-column: 2; text-align: center; display: flex; flex-direction: column; align-items: center; }
+  .gf-apresenta .gf-selo { font-size: 12.5px; letter-spacing: .1em; }
+  .gf-apresenta .gf-l1 { margin: 16px 0 0; font-family: var(--gf-titulos); font-weight: 700; font-size: clamp(28px, 3.6vw, 48px); line-height: 1.1; letter-spacing: -.01em; color: #fff; }
+  .gf-apresenta .gf-l2 { margin: 2px 0 0; font-family: var(--gf-titulos); font-weight: 700; font-size: clamp(28px, 3.6vw, 48px); line-height: 1.15; letter-spacing: -.01em;
+    background: linear-gradient(90deg, #f2b705, #ffdb6e 45%, #f2b705 90%); background-size: 200% 100%; -webkit-background-clip: text; background-clip: text; color: transparent; animation: gf-reluzir 6s linear infinite; }
   @keyframes gf-reluzir { to { background-position: -200% 0; } }
-  .gf-apresenta .gf-l3 { margin: 10px 0 0; font-size: clamp(13px, 1.4vw, 18px); letter-spacing: .3em; text-transform: uppercase; color: #fff; }
-  .gf-apresenta .gf-l4 { margin: 10px 0 0; font-size: clamp(13px, 1.3vw, 16.5px); letter-spacing: .14em; color: #dcecff; }
-  .gf-apresenta .gf-l5 { margin: 16px 0 0; font-size: clamp(14px, 1.3vw, 16.5px); font-style: italic; color: #fff; }
+  .gf-apresenta .gf-l5 { margin: 12px 0 0; font-size: clamp(15px, 1.4vw, 18px); line-height: 1.5; color: #dbe7fa; }
+  .gf-ferramentas { list-style: none; margin: 22px 0 0; padding: 0; display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; }
+  .gf-ferramentas li { display: inline-flex; align-items: center; gap: 8px; padding: 8px 16px; border-radius: 999px; font-size: 14px; font-weight: 600; white-space: nowrap;
+    color: #e6f3ff; background: rgba(13, 23, 48, .62); border: 1px solid rgba(143, 220, 255, .26); }
+  .gf-ferramentas li::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--gf-cor, var(--gf-amarelo)); }
   .gf-assina { display: flex; align-items: center; justify-content: flex-start; gap: 16px 18px; padding: 22px clamp(22px, 4vw, 56px) 26px;
     border-top: 1px solid rgba(143, 220, 255, .22); background: rgba(13, 23, 48, .45); }
   .gf-assina p { margin: 0; font-size: 15px; line-height: 1.7; }
@@ -204,6 +206,7 @@
     .gf-menu-lista { min-width: 250px; }
     .gf-rodape-cena { opacity: .22; }
     .gf-autora { grid-template-columns: minmax(0, 1fr); gap: 22px; padding: 34px 22px 28px; }
+    .gf-apresenta { grid-column: auto; }
     .gf-autora .gf-coluna-direita { display: flex; gap: 28px; }
     .gf-micro.gf-direita { justify-self: start; }
     .gf-micro.gf-baixo { margin-top: 0; align-self: start; }
@@ -297,11 +300,17 @@
   <div class="gf-autora">
     <ul class="gf-micro"><li>Transformando</li><li>dados em</li><li>oportunidades</li><li>financeiras</li></ul>
     <div class="gf-apresenta">
-      <p class="gf-l1">Análise de Dados <span aria-hidden="true">|</span></p>
-      <p class="gf-l2">Business Intelligence</p>
-      <p class="gf-l3">Finanças e Controladoria</p>
-      <p class="gf-l4">Power BI • SQL • DAX • Power Query</p>
-      <p class="gf-l5">Dados que apoiam decisões de negócio</p>
+      <span class="gf-selo">Finanças · Controladoria · BI</span>
+      <p class="gf-l1">Análise de Dados</p>
+      <p class="gf-l2">&amp; Business Intelligence</p>
+      <p class="gf-l5">Dados que apoiam decisões de negócio.</p>
+      <ul class="gf-ferramentas" aria-label="Ferramentas">
+        <li style="--gf-cor:#f2b705">Power BI</li>
+        <li style="--gf-cor:#3fb3ff">SQL</li>
+        <li style="--gf-cor:#ff7a5c">DAX</li>
+        <li style="--gf-cor:#ec5ca0">Power Query</li>
+        <li style="--gf-cor:#7c6cf0">Gestão Financeira</li>
+      </ul>
     </div>
     <div class="gf-coluna-direita">
       <ul class="gf-micro gf-direita"><li>Insights</li><li>Planejamento</li><li>Gestão financeira</li><li>Crescimento</li></ul>
@@ -310,8 +319,8 @@
   <div class="gf-assina">
     <a class="gf-linkedin" href="https://www.linkedin.com/in/andreiabrandborg" target="_blank" rel="noopener" aria-label="LinkedIn de Andreia Brandborg" title="Conectar no LinkedIn"><i aria-hidden="true">in</i></a>
     <div>
-      <p>Desenvolvido por <b>Andreia Brandborg</b> · <a class="gf-link" href="mailto:andreiabrandborg@gmail.com">andreiabrandborg@gmail.com</a></p>
-      <p class="gf-nota">Projeto de portfólio, desenvolvido para fins de demonstração.</p>
+      <p>Desenvolvido por <b>Andreia Brandborg</b> · Análise de Dados &amp; Business Intelligence · <a class="gf-link" href="mailto:andreiabrandborg@gmail.com">andreiabrandborg@gmail.com</a></p>
+      <p class="gf-nota">Projeto de portfólio · Dados que apoiam decisões de negócio.</p>
     </div>
   </div>
 </footer>
